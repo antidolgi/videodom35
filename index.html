@@ -6,6 +6,7 @@
   <meta name="description" content="Видеодом35 — системы безопасности и автоматизации в Вологде: видеонаблюдение, домофония, сигнализация, умный дом. Проектирование, монтаж, гарантия.">
   <title>Видеодом35 | Системы безопасности в Вологде</title>
 
+  <!-- Open Graph -->
   <meta property="og:title" content="Видеодом35 — безопасность под ключ">
   <meta property="og:description" content="Профессиональный монтаж систем видеонаблюдения и автоматизации в Вологде. Бесплатный выезд инженера.">
   <meta property="og:image" content="https://via.placeholder.com/1200x630/0B1A2F/00D4FF?text=Видеодом35">
@@ -37,140 +38,57 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html {
-      scroll-behavior: auto;
-      font-family: var(--font-main);
-      background-color: var(--bg);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    body {
-      line-height: 1.4;
-      -webkit-font-smoothing: antialiased;
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
+    html { scroll-behavior: auto; font-family: var(--font-main); background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+    body { line-height: 1.4; -webkit-font-smoothing: antialiased; opacity: 0; transition: opacity 0.4s; }
     body.loaded { opacity: 1; }
 
-    /* ===== Фоновый canvas ===== */
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 
-    /* ===== Кастомный курсор-прицел ===== */
-    .cursor {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      width: 30px;
-      height: 30px;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s;
-      filter: drop-shadow(0 0 6px rgba(0,212,255,0.7));
-    }
+    /* === Курсор-прицел === */
+    .cursor { position: fixed; pointer-events: none; z-index: 9999; width: 30px; height: 30px; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; filter: drop-shadow(0 0 6px rgba(0,212,255,0.7)); }
     .cursor.hover { width: 50px; height: 50px; }
-    .cursor::before,
-    .cursor::after {
-      content: '';
-      position: absolute;
-      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-      background-size: 200% 100%;
-      animation: cursorGradient 2s linear infinite;
-      border-radius: 1px;
-    }
+    .cursor::before, .cursor::after { content: ''; position: absolute; background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent)); background-size: 200% 100%; animation: cursorGradient 2s linear infinite; border-radius: 1px; }
     .cursor::before { width: 2px; height: 100%; left: 50%; transform: translateX(-50%); }
     .cursor::after { height: 2px; width: 100%; top: 50%; transform: translateY(-50%); }
+    @keyframes cursorGradient { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
 
-    @keyframes cursorGradient {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-
-    /* ===== Прелоадер ===== */
-    #preloader {
-      position: fixed; inset: 0; background: var(--bg);
-      z-index: 10000; display: flex; align-items: center; justify-content: center;
-    }
+    /* === Прелоадер === */
+    #preloader { position: fixed; inset: 0; background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
     #preloader canvas { width: 80vw; max-width: 600px; }
 
-    /* ===== Хедер ===== */
-    .header {
-      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-      padding: 1.5rem 3rem; display: flex; justify-content: space-between;
-      align-items: center; transition: background 0.3s, backdrop-filter 0.3s;
-    }
-    .header.scrolled {
-      background: rgba(8,13,23,0.85); backdrop-filter: blur(20px);
-    }
+    /* === Хедер === */
+    .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s, backdrop-filter 0.3s; }
+    .header.scrolled { background: rgba(8,13,23,0.85); backdrop-filter: blur(20px); }
     .logo { font-weight: 700; font-size: 1.6rem; color: var(--text); }
     .logo span { color: var(--accent); }
-    .nav-menu a {
-      color: var(--text-secondary); text-decoration: none; margin-left: 2.5rem;
-      font-weight: 500; transition: color 0.3s;
-    }
+    .nav-menu a { color: var(--text-secondary); text-decoration: none; margin-left: 2.5rem; font-weight: 500; transition: color 0.3s; }
     .nav-menu a:hover { color: var(--text); }
     .burger { display: none; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1001; }
     .burger span { display: block; width: 26px; height: 2px; background: var(--text); transition: 0.3s; }
 
     @media (max-width: 768px) {
       .header { padding: 1rem 1.5rem; }
-      .nav-menu {
-        position: fixed; top: 0; right: -100%; height: 100vh; width: 70%;
-        background: rgba(8,13,23,0.95); backdrop-filter: blur(25px);
-        flex-direction: column; padding: 6rem 2rem; display: flex; gap: 2rem;
-        transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      }
+      .nav-menu { position: fixed; top: 0; right: -100%; height: 100vh; width: 70%; background: rgba(8,13,23,0.95); backdrop-filter: blur(25px); flex-direction: column; padding: 6rem 2rem; display: flex; gap: 2rem; transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
       .nav-menu.active { right: 0; }
       .nav-menu a { margin-left: 0; font-size: 1.3rem; }
       .burger { display: flex; }
     }
 
-    /* ===== Секции ===== */
-    section {
-      padding: 5rem 3rem; max-width: 1400px; margin: 0 auto;
-      opacity: 0; transform: translateY(40px);
-    }
-    .hero {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; padding-top: 6rem;
-    }
-    .hero-video {
-      position: absolute; inset: 0; object-fit: cover;
-      width: 100%; height: 100%; opacity: 0.35; z-index: 0;
-    }
+    /* === Секции === */
+    section { padding: 5rem 3rem; max-width: 1400px; margin: 0 auto; opacity: 0; transform: translateY(40px); }
+    .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding-top: 6rem; }
+    .hero-video { position: absolute; inset: 0; object-fit: cover; width: 100%; height: 100%; opacity: 0.35; z-index: 0; }
     .hero-content { position: relative; z-index: 2; text-align: center; }
     .hero h1 { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; }
     .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 2.5rem; }
-    .btn-primary {
-      background: transparent; border: 2px solid var(--accent); color: var(--accent);
-      padding: 1rem 2.5rem; font-weight: 600; border-radius: 50px; font-size: 1.1rem;
-      cursor: pointer; transition: all 0.3s; display: inline-block;
-    }
+    .btn-primary { background: transparent; border: 2px solid var(--accent); color: var(--accent); padding: 1rem 2.5rem; font-weight: 600; border-radius: 50px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; display: inline-block; }
     .btn-primary:hover { background: var(--accent); color: var(--bg); box-shadow: var(--neon-glow); }
 
-    .section-title {
-      font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 2rem;
-      position: relative; display: inline-block;
-    }
-    .section-title::after {
-      content: ''; position: absolute; bottom: -8px; left: 0; width: 60%; height: 3px;
-      background: var(--accent); box-shadow: var(--neon-glow);
-    }
+    .section-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 2rem; position: relative; display: inline-block; }
+    .section-title::after { content: ''; position: absolute; bottom: -8px; left: 0; width: 60%; height: 3px; background: var(--accent); box-shadow: var(--neon-glow); }
 
     .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-    .service-card {
-      background: var(--glass-bg); backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border); border-radius: var(--radius);
-      padding: 2.5rem 2rem; text-align: center; transition: transform 0.3s, box-shadow 0.4s;
-    }
+    .service-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 2.5rem 2rem; text-align: center; transition: transform 0.3s, box-shadow 0.4s; }
     .service-card:hover { box-shadow: 0 0 30px rgba(0,212,255,0.2); }
     .service-card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem; }
     .service-card h3 { font-weight: 600; margin-bottom: 0.75rem; }
@@ -183,44 +101,52 @@
     .swiper { width: 100%; border-radius: var(--radius); overflow: hidden; }
     .swiper-slide img { width: 100%; height: 400px; object-fit: cover; }
 
+    /* === Цены === */
     .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
-    .pricing-card { background: var(--surface); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 2rem; transition: 0.3s; }
+    .pricing-card { background: var(--surface); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 2rem; transition: 0.3s; cursor: pointer; }
     .pricing-card.featured { border-color: var(--accent); box-shadow: var(--neon-glow); }
     .price { font-family: var(--font-mono); font-size: 2.5rem; margin: 1rem 0; color: var(--accent); }
+    .pricing-details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+    .pricing-details.open { max-height: 300px; margin-top: 1rem; }
+    .pricing-details ul { list-style: none; color: var(--text-secondary); }
+    .pricing-details li { padding: 0.3rem 0; font-size: 0.9rem; }
 
+    /* === Этапы (таймлайн) === */
+    .steps-timeline { display: flex; flex-direction: column; gap: 2rem; position: relative; max-width: 700px; margin: 0 auto; }
+    .step-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .step-number { font-family: var(--font-mono); font-size: 2rem; font-weight: 700; color: var(--accent); min-width: 50px; text-align: center; line-height: 1; }
+    .step-content { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 1.5rem; flex: 1; }
+    .step-content h4 { margin-bottom: 0.5rem; color: var(--text); }
+    .step-content p { color: var(--text-secondary); font-size: 0.95rem; }
+
+    /* === FAQ === */
     .faq-item { border-bottom: 1px solid rgba(255,255,255,0.1); padding: 1.5rem 0; cursor: pointer; }
     .faq-question { display: flex; justify-content: space-between; font-weight: 600; }
     .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
 
+    /* === Форма === */
     .contact-form { display: flex; flex-direction: column; gap: 1.5rem; max-width: 500px; margin: 2rem auto; }
     .input-group { position: relative; }
-    .input-group input,
-    .input-group textarea {
-      width: 100%; padding: 1rem; background: transparent; border: none;
-      border-bottom: 2px solid rgba(255,255,255,0.2); color: var(--text);
-      font-size: 1rem; outline: none; transition: border-color 0.3s;
-    }
+    .input-group input, .input-group textarea { width: 100%; padding: 1rem; background: transparent; border: none; border-bottom: 2px solid rgba(255,255,255,0.2); color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.3s; }
     .input-group label { position: absolute; left: 1rem; top: 1rem; color: var(--text-secondary); transition: 0.3s; pointer-events: none; }
-    .input-group input:focus ~ label,
-    .input-group input:valid ~ label,
-    .input-group textarea:focus ~ label,
-    .input-group textarea:valid ~ label { top: -0.5rem; font-size: 0.75rem; color: var(--accent); }
+    .input-group input:focus ~ label, .input-group input:valid ~ label, .input-group textarea:focus ~ label, .input-group textarea:valid ~ label { top: -0.5rem; font-size: 0.75rem; color: var(--accent); }
     .input-group .line { position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--accent); transition: width 0.3s; }
-    .input-group input:focus ~ .line,
-    .input-group textarea:focus ~ .line { width: 100%; }
+    .input-group input:focus ~ .line, .input-group textarea:focus ~ .line { width: 100%; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .checkbox-group label { display: flex; align-items: center; gap: 0.3rem; color: var(--text-secondary); font-size: 0.9rem; cursor: pointer; }
+    .captcha-block { display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; }
+    .captcha-block input { width: 60px; background: transparent; border: 1px solid var(--glass-border); color: var(--text); padding: 0.3rem; border-radius: 4px; text-align: center; }
+    .policy-link { color: var(--accent); text-decoration: underline; cursor: pointer; }
 
-    .footer { text-align: center; padding: 2rem; color: var(--text-secondary); border-top: 1px solid rgba(255,255,255,0.05); }
+    /* === Модалка === */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 11000; align-items: center; justify-content: center; }
+    .modal.active { display: flex; }
+    .modal-content { background: var(--surface); border: 1px solid var(--glass-border); border-radius: var(--radius); padding: 2rem; max-width: 600px; max-height: 80vh; overflow-y: auto; color: var(--text-secondary); }
+    .modal-content h3 { color: var(--text); margin-bottom: 1rem; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; }
 
-    /* Кнопка наверх */
-    .scroll-to-top {
-      position: fixed; bottom: 30px; right: 30px; z-index: 900;
-      width: 50px; height: 50px; border-radius: 50%;
-      background: rgba(0,212,255,0.15); border: 1px solid #00D4FF;
-      color: #00D4FF; font-size: 1.5rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(10px); transition: all 0.3s;
-      opacity: 0; visibility: hidden; transform: translateY(20px);
-    }
+    /* === Кнопка наверх === */
+    .scroll-to-top { position: fixed; bottom: 30px; right: 30px; z-index: 900; width: 50px; height: 50px; border-radius: 50%; background: rgba(0,212,255,0.15); border: 1px solid #00D4FF; color: #00D4FF; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s; opacity: 0; visibility: hidden; transform: translateY(20px); }
     .scroll-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
     .scroll-to-top:hover { background: #00D4FF; color: #080D17; box-shadow: var(--neon-glow); }
 
@@ -230,19 +156,13 @@
   </style>
 </head>
 <body>
-
-  <!-- Фоновые частицы (canvas) — строго в начале body -->
   <canvas id="bg-canvas"></canvas>
-
-  <!-- Кастомный курсор -->
   <div class="cursor"></div>
 
-  <!-- Прелоадер -->
   <div id="preloader">
     <canvas id="preloader-canvas"></canvas>
   </div>
 
-  <!-- Хедер -->
   <header class="header" id="header">
     <div class="logo">Видео<span>дом35</span></div>
     <nav class="nav-menu" id="nav-menu">
@@ -252,9 +172,7 @@
       <a href="#faq">FAQ</a>
       <a href="#contacts">Контакты</a>
     </nav>
-    <div class="burger" id="burger">
-      <span></span><span></span><span></span>
-    </div>
+    <div class="burger" id="burger"><span></span><span></span><span></span></div>
   </header>
 
   <!-- Hero -->
@@ -328,58 +246,128 @@
     </div>
   </section>
 
-  <!-- Цены -->
+  <!-- Цены (раскрывающиеся детали) -->
   <section id="pricing">
     <h2 class="section-title">Стоимость</h2>
     <div class="pricing-grid">
-      <div class="pricing-card">
+      <div class="pricing-card" data-details>
         <h3>Базовый</h3>
         <div class="price">от 29 000 ₽</div>
         <p>4 камеры + регистратор</p>
+        <div class="pricing-details">
+          <ul>
+            <li>4 уличные IP-камеры</li>
+            <li>Видеорегистратор на 8 каналов</li>
+            <li>Монтаж и настройка</li>
+            <li>Обучение пользователя</li>
+          </ul>
+        </div>
       </div>
-      <div class="pricing-card featured">
+      <div class="pricing-card featured" data-details>
         <h3>Оптимальный</h3>
         <div class="price">от 55 000 ₽</div>
         <p>8 камер, домофон, датчики</p>
+        <div class="pricing-details">
+          <ul>
+            <li>8 IP-камер (внутри/снаружи)</li>
+            <li>IP-домофон с вызывной панелью</li>
+            <li>7" внутренний монитор</li>
+            <li>Датчики открытия/движения</li>
+            <li>Монтаж и пусконаладка</li>
+          </ul>
+        </div>
       </div>
-      <div class="pricing-card">
+      <div class="pricing-card" data-details>
         <h3>Премиум</h3>
         <div class="price">от 120 000 ₽</div>
         <p>Умный дом + полная безопасность</p>
+        <div class="pricing-details">
+          <ul>
+            <li>До 16 камер с deep-аналитикой</li>
+            <li>Контроллер умного дома</li>
+            <li>Автоматизация света, климата</li>
+            <li>СКУД + домофония</li>
+            <li>Датчики протечек, дыма, газа</li>
+            <li>Годовое облачное хранилище</li>
+            <li>Монтаж «под ключ»</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Этапы работы -->
+  <!-- Как мы работаем (таймлайн) -->
   <section id="steps">
     <h2 class="section-title">Как мы работаем</h2>
-    <div style="display:flex; flex-direction:column; gap:2rem; max-width:600px; margin:0 auto;">
-      <div><strong>1.</strong> Заявка / звонок</div>
-      <div><strong>2.</strong> Выезд инженера, замер</div>
-      <div><strong>3.</strong> Проект и смета</div>
-      <div><strong>4.</strong> Монтаж и настройка</div>
-      <div><strong>5.</strong> Сдача объекта и обучение</div>
+    <div class="steps-timeline">
+      <div class="step-item">
+        <div class="step-number">01</div>
+        <div class="step-content">
+          <h4>Заявка или звонок</h4>
+          <p>Оставьте заявку на сайте или позвоните нам. Уточним задачу и предложим варианты.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">02</div>
+        <div class="step-content">
+          <h4>Выезд инженера</h4>
+          <p>Бесплатно выезжаем на объект в Вологде, проводим замеры и оценку.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">03</div>
+        <div class="step-content">
+          <h4>Проект и смета</h4>
+          <p>Разрабатываем детальный проект с указанием мест установки, готовим точную смету.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">04</div>
+        <div class="step-content">
+          <h4>Монтаж и настройка</h4>
+          <p>Аккуратно монтируем оборудование, настраиваем удалённый доступ и автоматизацию.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-number">05</div>
+        <div class="step-content">
+          <h4>Сдача объекта и обучение</h4>
+          <p>Проверяем всё вместе с вами, обучаем пользоваться системой, выдаём гарантию.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- FAQ (расширен) -->
   <section id="faq">
     <h2 class="section-title">Частые вопросы</h2>
     <div class="faq-item">
       <div class="faq-question"><span>Нужно ли прокладывать провода?</span><span>+</span></div>
-      <div class="faq-answer">Да, для стабильной работы IP‑камер и домофонии прокладывается кабель UTP. Возможны гибридные решения с Wi‑Fi.</div>
+      <div class="faq-answer">Для стабильной работы IP‑камер и домофонии прокладывается кабель UTP. Возможны гибридные решения с Wi‑Fi.</div>
     </div>
     <div class="faq-item">
       <div class="faq-question"><span>Сколько длится монтаж?</span><span>+</span></div>
-      <div class="faq-answer">От 1 дня, зависит от объёма и погоды.</div>
+      <div class="faq-answer">От 1 дня, зависит от объёма и погоды. Средний коттедж — 2–3 дня.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question"><span>Даёте ли гарантию?</span><span>+</span></div>
+      <div class="faq-answer">Да, 3 года на оборудование и монтаж. Постгарантийное обслуживание по договору.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question"><span>Можно ли добавить камеры позже?</span><span>+</span></div>
+      <div class="faq-answer">Конечно, система масштабируется. Регистратор подбираем с запасом по каналам.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question"><span>Работаете ли в районах области?</span><span>+</span></div>
+      <div class="faq-answer">Выезжаем по всей Вологодской области. Стоимость выезда за пределы города — по согласованию.</div>
     </div>
   </section>
 
-  <!-- Контакты -->
+  <!-- Контакты и форма -->
   <section id="contacts">
     <h2 class="section-title">Контакты</h2>
     <p style="text-align:center; margin-bottom:1rem;">+7 (995) 788-66-68<br>pstudio817@yandex.ru</p>
-    <form class="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+    <form class="contact-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" id="contactForm">
       <div class="input-group">
         <input type="text" name="name" required>
         <label>Ваше имя</label>
@@ -390,21 +378,48 @@
         <label>Телефон</label>
         <div class="line"></div>
       </div>
+      <div class="checkbox-group">
+        <label><input type="checkbox" name="services" value="videonabludenie"> Видеонаблюдение</label>
+        <label><input type="checkbox" name="services" value="domofonia"> Домофония</label>
+        <label><input type="checkbox" name="services" value="signalizacia"> Сигнализация</label>
+        <label><input type="checkbox" name="services" value="smarthome"> Умный дом</label>
+      </div>
       <div class="input-group">
         <textarea name="message" rows="3" required></textarea>
         <label>Комментарий</label>
         <div class="line"></div>
       </div>
+      <div class="captcha-block">
+        <span>Сколько будет 2 + 3?</span>
+        <input type="text" id="captchaInput" required>
+      </div>
+      <label style="font-size:0.8rem; color:var(--text-secondary); display:flex; align-items:center; gap:0.3rem;">
+        <input type="checkbox" required> Я согласен с <a class="policy-link" id="openPolicy">политикой конфиденциальности</a>
+      </label>
       <button type="submit" class="btn-primary">Отправить заявку</button>
     </form>
   </section>
 
   <footer class="footer">
-    © 2025 Видеодом35. Вологда.
+    © 2025 Видеодом35. Вологда. <a class="policy-link" id="footerPolicyLink">Политика конфиденциальности</a>
   </footer>
 
-  <!-- Кнопка наверх -->
   <button class="scroll-to-top" id="scrollToTop" aria-label="Наверх">↑</button>
+
+  <!-- Модальное окно политики -->
+  <div class="modal" id="policyModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeModal">&times;</button>
+      <h3>Политика конфиденциальности</h3>
+      <p>Настоящая Политика конфиденциальности персональных данных действует в отношении всей информации, которую ИП «Видеодом35» (далее — Компания) может получить о Пользователе во время использования сайта.</p>
+      <p><strong>1. Персональные данные</strong><br>Имя, номер телефона, адрес электронной почты — предоставляются Пользователем добровольно при заполнении формы обратной связи.</p>
+      <p><strong>2. Цели обработки</strong><br>Консультация, расчёт стоимости, выполнение услуг, обратная связь.</p>
+      <p><strong>3. Передача третьим лицам</strong><br>Данные не передаются, за исключением случаев, предусмотренных законодательством РФ.</p>
+      <p><strong>4. Хранение и защита</strong><br>Мы принимаем организационные и технические меры для защиты данных от неправомерного доступа.</p>
+      <p><strong>5. Права Пользователя</strong><br>Пользователь вправе требовать уточнения, блокировки или удаления своих данных, направив запрос на pstudio817@yandex.ru.</p>
+      <p>Используя сайт, вы даёте согласие на обработку персональных данных в соответствии с данной политикой.</p>
+    </div>
+  </div>
 
   <!-- Скрипты -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
@@ -416,20 +431,20 @@
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.36/dist/lenis.min.js"></script>
 
   <script>
-    // == Lenis ==
+    // Lenis
     const lenis = new Lenis({ duration: 1.5, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
 
-    // == Прелоадер ==
+    // Прелоадер
     window.addEventListener('DOMContentLoaded', () => {
       const pCanvas = document.getElementById('preloader-canvas');
       const ctx = pCanvas.getContext('2d');
       pCanvas.width = window.innerWidth * 0.8;
       pCanvas.height = 200;
-      // заглушка, можно доработать
+      // заглушка анимации, можно доработать
       setTimeout(() => {
         document.getElementById('preloader').style.opacity = '0';
         setTimeout(() => {
@@ -439,18 +454,18 @@
       }, 1800);
     });
 
-    // == Кастомный курсор ==
+    // Кастомный курсор
     const cursor = document.querySelector('.cursor');
     document.addEventListener('mousemove', (e) => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
     });
-    document.querySelectorAll('a, button, .service-card, .faq-item, .burger').forEach(el => {
+    document.querySelectorAll('a, button, .service-card, .faq-item, .burger, .pricing-card').forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
-    // == ScrollTrigger для секций ==
+    // GSAP анимации секций
     gsap.registerPlugin(ScrollTrigger);
     document.querySelectorAll('section').forEach(section => {
       gsap.fromTo(section, { opacity: 0, y: 60, scale: 0.95 }, {
@@ -459,7 +474,7 @@
       });
     });
 
-    // == Счётчики преимуществ ==
+    // Счётчики
     const numbers = document.querySelectorAll('.advantage-number');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -480,19 +495,17 @@
     });
     numbers.forEach(n => observer.observe(n));
 
-    // == Swiper ==
+    // Swiper
     new Swiper('.swiper', {
       loop: true,
       pagination: { el: '.swiper-pagination', clickable: true },
       autoplay: { delay: 4000 },
     });
 
-    // == Tilt ==
-    VanillaTilt.init(document.querySelectorAll('.service-card'), {
-      max: 10, speed: 400, glare: true, 'max-glare': 0.3,
-    });
+    // Tilt
+    VanillaTilt.init(document.querySelectorAll('.service-card'), { max: 10, speed: 400, glare: true, 'max-glare': 0.3 });
 
-    // == FAQ аккордеон ==
+    // FAQ аккордеон
     document.querySelectorAll('.faq-item').forEach(item => {
       item.addEventListener('click', () => {
         const answer = item.querySelector('.faq-answer');
@@ -502,33 +515,55 @@
       });
     });
 
-    // == Бургер ==
-    const burger = document.getElementById('burger');
-    const nav = document.getElementById('nav-menu');
-    burger.addEventListener('click', () => nav.classList.toggle('active'));
+    // Бургер
+    document.getElementById('burger').addEventListener('click', () => document.getElementById('nav-menu').classList.toggle('active'));
 
-    // == Splitting.js ==
+    // Splitting.js
     Splitting({ target: '.hero h1', by: 'chars' });
     gsap.from('.hero .char', { opacity: 0, y: 40, blur: 10, stagger: 0.03, duration: 0.8, delay: 0.5 });
 
-    // == Прозрачный хедер при скролле ==
+    // Прозрачный хедер при скролле
     window.addEventListener('scroll', () => {
       const header = document.getElementById('header');
-      if (window.scrollY > 50) header.classList.add('scrolled');
-      else header.classList.remove('scrolled');
+      header.classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // == Кнопка наверх ==
+    // Кнопка наверх
     const scrollBtn = document.getElementById('scrollToTop');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 600) scrollBtn.classList.add('visible');
-      else scrollBtn.classList.remove('visible');
+      scrollBtn.classList.toggle('visible', window.scrollY > 600);
     });
-    scrollBtn.addEventListener('click', () => {
-      lenis.scrollTo(0, { duration: 1.5 });
+    scrollBtn.addEventListener('click', () => lenis.scrollTo(0, { duration: 1.5 }));
+
+    // Раскрывающиеся цены
+    document.querySelectorAll('.pricing-card[data-details]').forEach(card => {
+      card.addEventListener('click', function(e) {
+        // не срабатывать на вложенных элементах, если нужно, но оставим простой toggle
+        const details = this.querySelector('.pricing-details');
+        details.classList.toggle('open');
+      });
     });
 
-    // == Фоновые частицы (canvas) ==
+    // Модалка политики
+    const modal = document.getElementById('policyModal');
+    document.getElementById('openPolicy').addEventListener('click', (e) => {
+      e.preventDefault();
+      modal.classList.add('active');
+    });
+    document.getElementById('footerPolicyLink').addEventListener('click', () => modal.classList.add('active'));
+    document.getElementById('closeModal').addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+    // Капча (простая проверка перед отправкой)
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      const captcha = document.getElementById('captchaInput').value.trim();
+      if (captcha !== '5') {
+        e.preventDefault();
+        alert('Пожалуйста, правильно решите пример: 2+3 = ?');
+      }
+    });
+
+    // Фоновые частицы
     const bgCanvas = document.getElementById('bg-canvas');
     const bgCtx = bgCanvas.getContext('2d');
     let width, height;
