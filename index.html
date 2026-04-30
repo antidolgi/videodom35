@@ -64,44 +64,48 @@
     body.loaded {
       opacity: 1;
     }
+<canvas id="bg-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none;"></canvas>
+    /* Кастомный курсор (прицел) с градиентом */
+.cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s, height 0.2s;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.7));
+}
+.cursor.hover {
+  width: 50px;
+  height: 50px;
+}
+.cursor::before,
+.cursor::after {
+  content: '';
+  position: absolute;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+  background-size: 200% 100%;
+  animation: cursorGradient 2s linear infinite;
+  border-radius: 1px;
+}
+.cursor::before {
+  width: 2px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.cursor::after {
+  height: 2px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
 
-    /* кастомный курсор (прицел) */
-    .cursor {
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      transform: translate(-50%, -50%);
-      transition: transform 0.15s ease-out, width 0.2s, height 0.2s;
-    }
-    .cursor.hover {
-      width: 50px;
-      height: 50px;
-      transition: width 0.2s, height 0.2s;
-    }
-    .cursor::before,
-    .cursor::after {
-      content: '';
-      position: absolute;
-      background: var(--accent);
-      transition: all 0.2s;
-    }
-    .cursor::before {
-      width: 2px;
-      height: 100%;
-    }
-    .cursor::after {
-      height: 2px;
-      width: 100%;
-    }
-
-    @media (pointer: coarse) {
-      .cursor { display: none; }
-    }
+@keyframes cursorGradient {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
 
     /* ===== PRELOADER ===== */
     #preloader {
@@ -482,8 +486,8 @@
 
 <!-- Hero -->
 <section class="hero" id="hero">
-  <video autoplay muted loop playsinline class="hero-video" poster="https://via.placeholder.com/1920x1080/080D17/00D4FF?text=Видеонаблюдение">
-    <source src="/video/volsecurity.mp4" type="video/mp4"> <!-- ЗАМЕНИ НА СВОЁ -->
+  <video autoplay muted loop playsinline class="hero-video" poster="images/4ystan.png">
+    <source src="video/volsecurity.mp4" type="video/mp4"> <!-- ЗАМЕНИ НА СВОЁ -->
   </video>
   <div class="hero-content">
     <h1 data-splitting>Умная защита вашего пространства</h1>
@@ -543,9 +547,9 @@
   <h2 class="section-title">Выполненные проекты</h2>
   <div class="swiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide"><img src="/images/5roof.png text=Коттедж+видеонаблюдение" alt="Проект 1"></div>
-      <div class="swiper-slide"><img src="/images/3viezd.png text=Офис+СКУД" alt="Проект 2"></div>
-      <div class="swiper-slide"><img src="/images/1.png text=ЖК" alt="Проект 3"></div>
+      <div class="swiper-slide"><img src="/images/5roof.png" alt="Проект 1"></div>
+      <div class="swiper-slide"><img src="/images/3viezd.png" alt="Проект 2"></div>
+      <div class="swiper-slide"><img src="/images/1.png" alt="Проект 3"></div>
     </div>
     <div class="swiper-pagination"></div>
   </div>
@@ -731,6 +735,7 @@
       if (!isOpen) answer.style.maxHeight = answer.scrollHeight + 'px';
     });
   });
+  
 
   // ---- Бургер-меню ----
   const burger = document.getElementById('burger');
@@ -740,14 +745,6 @@
   // ---- Splitting.js для hero ----
   Splitting({ target: '.hero h1', by: 'chars' });
   gsap.from('.hero .char', { opacity: 0, y: 40, blur: 10, stagger: 0.03, duration: 0.8, delay: 0.5 });
-
-  // ---- Three.js только для десктопа ----
-  if (window.innerWidth > 1024) {
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-    script.onload = initThreeScene;
-    document.head.appendChild(script);
-  }
 
   function initThreeScene() {
     const scene = new THREE.Scene();
@@ -778,6 +775,78 @@
     }
     animate();
   }
+  // ===== ЧАСТИЦЫ НА ВСЁМ ФОНЕ =====
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let width, height;
+let particles = [];
+const PARTICLE_COUNT = 180; // умеренно для мобильных
+
+function resize() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  bgCanvas.width = width;
+  bgCanvas.height = height;
+}
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.radius = Math.random() * 2 + 0.5;
+    this.speedY = Math.random() * 0.6 + 0.2; // базовая скорость
+    this.parallaxFactor = Math.random() * 0.5 + 0.3; // разный отклик на скролл
+    this.opacity = Math.random() * 0.7 + 0.3;
+  }
+  update(scrollOffset = 0) {
+    // Медленное движение вверх + влияние скролла
+    this.y -= this.speedY;
+    // Параллакс: чем дальше "глубина", тем медленнее смещается при скролле
+    this.y += (scrollOffset * 0.15) * this.parallaxFactor;
+    
+    // Если частица ушла за верх – появляется снизу
+    if (this.y < -10) {
+      this.y = height + 10;
+      this.x = Math.random() * width;
+    }
+  }
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 212, 255, ${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+function initParticles() {
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle());
+  }
+}
+
+resize();
+initParticles();
+
+let lastScrollY = 0;
+
+function animateParticles() {
+  const scrollY = lenis?.scroll ?? window.scrollY; // используем Lenis
+  const delta = scrollY - lastScrollY;
+  lastScrollY = scrollY;
+  
+  bgCtx.clearRect(0, 0, width, height);
+  
+  particles.forEach(p => {
+    p.update(delta); // передаём разницу скролла для плавности
+    p.draw(bgCtx);
+  });
+  
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
 </script>
+  
 </body>
 </html>
