@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект видеонаблюдения — Магазин одежды</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: #f5f5f5;
+            padding-bottom: 70px;
+        }
+        
+        /* Навигация */
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+        .nav button {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            padding: 5px 15px;
+        }
+        .nav button.active { color: #2196F3; }
+        .nav button svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        /* Страницы */
+        .page { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .page.active { display: block; }
+        
+        .header {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 24px; margin-bottom: 10px; }
+        .stats { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 15px; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 28px; font-weight: bold; }
+        .stat-label { font-size: 12px; opacity: 0.9; }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .card h2 { color: #1976D2; margin-bottom: 15px; font-size: 20px; }
+        
+        /* SVG схема */
+        .map-container {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            height: 60vh;
+        }
+        #svgCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        #svgCanvas:active { cursor: grabbing; }
+        .map-controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        .map-controls button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        /* Таблицы */
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f5f5f5; color: #666; font-weight: 600; }
+        tr:hover { background: #f9f9f9; }
+        .price { font-weight: bold; color: #2196F3; }
+        .total-row { background: #E3F2FD; font-weight: bold; }
+        
+        /* Калькулятор */
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .calc-row label { flex: 1; }
+        .calc-row input {
+            width: 120px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            text-align: right;
+            font-size: 16px;
+        }
+        .calc-total {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #1976D2;
+            padding: 15px;
+            background: #E3F2FD;
+            border-radius: 8px;
+        }
+        
+        .btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover { background: #1976D2; }
+        
+        @media print {
+            .nav, .map-controls, .btn { display: none; }
+            .page { display: block !important; page-break-after: always; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Навигация -->
+<div class="nav">
+    <button class="active" onclick="showPage('page1')">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        Схема
+    </button>
+    <button onclick="showPage('page2')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        Оборудование
+    </button>
+    <button onclick="showPage('page3')">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        Калькулятор
+    </button>
+    <button onclick="showPage('page4')">
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        Кабель
+    </button>
+</div>
+
+<!-- СТРАНИЦА 1: СХЕМА -->
+<div id="page1" class="page active">
+    <div class="header">
+        <h1>📹 Система видеонаблюдения</h1>
+        <p>Магазин одежды • 1720 м²</p>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">41</div>
+                <div class="stat-label">Камеры</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Свитча</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Регистратора</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📐 Схема размещения камер</h2>
+        <p style="margin-bottom: 10px; color: #666; font-size: 14px;">
+            Двигайте карту мышью или пальцем. Используйте кнопки для масштабирования.
+        </p>
+        <div class="map-container">
+            <svg id="svgCanvas" viewBox="0 0 2000 1500" preserveAspectRatio="xMidYMid meet">
+                <g id="mapGroup"></g>
+            </svg>
+            <div class="map-controls">
+                <button onclick="zoom(1.2)">+</button>
+                <button onclick="zoom(0.8)">−</button>
+                <button onclick="resetView()">⟲</button>
+            </div>
+        </div>
+        <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap; justify-content: center;">
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 12px; height: 12px; background: #f44336; border-radius: 50%;"></div>
+                <span style="font-size: 13px;">Свитч 1 (Столб)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 12px; height: 12px; background: #4CAF50; border-radius: 50%;"></div>
+                <span style="font-size: 13px;">Свитч 2 (Зал)</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <div style="width: 12px; height: 12px; background: #9C27B0; border-radius: 50%;"></div>
+                <span style="font-size: 13px;">Свитч 3 (Склад)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- СТРАНИЦА 2: ОБОРУДОВАНИЕ -->
+<div id="page2" class="page">
+    <div class="header">
+        <h1>📦 Оборудование</h1>
+        <p>Dahua Technology</p>
+    </div>
+
+    <div class="card">
+        <h2>💰 Бюджетное решение (189,230 ₽)</h2>
+        <table>
+            <thead>
+                <tr><th>№</th><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>DH-IPC-HDPW1230R1P (2Мп)</td><td>40</td><td class="price">2,190 ₽</td><td class="price">87,600 ₽</td></tr>
+                <tr><td>2</td><td>DH-IPC-HDPW1431R1P-ZS (4Мп)</td><td>2</td><td class="price">6,100 ₽</td><td class="price">12,200 ₽</td></tr>
+                <tr><td>3</td><td>DHI-NVR2116HS-4KS3</td><td>1</td><td class="price">6,950 ₽</td><td class="price">6,950 ₽</td></tr>
+                <tr><td>4</td><td>DHI-NVR4232-4KS3</td><td>1</td><td class="price">13,500 ₽</td><td class="price">13,500 ₽</td></tr>
+                <tr><td>5</td><td>DH-CS4220-16GT-135 (16 портов)</td><td>2</td><td class="price">10,490 ₽</td><td class="price">20,980 ₽</td></tr>
+                <tr><td>6</td><td>DH-CS4228-24GT-240 (24 порта)</td><td>1</td><td class="price">16,500 ₽</td><td class="price">16,500 ₽</td></tr>
+                <tr><td>7</td><td>DH-PFA137 (коробки)</td><td>42</td><td class="price">750 ₽</td><td class="price">31,500 ₽</td></tr>
+                <tr class="total-row"><td colspan="4">Итого:</td><td class="price">189,230 ₽</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>⭐ Оптимальное решение (319,330 ₽)</h2>
+        <table>
+            <thead>
+                <tr><th>№</th><th>Наименование</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>DH-IPC-HDW2449TP-S-IL (4Мп Full-color)</td><td>40</td><td class="price">4,950 ₽</td><td class="price">198,000 ₽</td></tr>
+                <tr><td>2</td><td>DH-IPC-HDW2849TP-ZS-IL (8Мп)</td><td>2</td><td class="price">11,950 ₽</td><td class="price">23,900 ₽</td></tr>
+                <tr><td>3</td><td>DHI-NVR4216-4KS3</td><td>1</td><td class="price">10,950 ₽</td><td class="price">10,950 ₽</td></tr>
+                <tr><td>4</td><td>DHI-NVR4232-4KS3</td><td>1</td><td class="price">13,500 ₽</td><td class="price">13,500 ₽</td></tr>
+                <tr><td>5</td><td>DH-CS4220-16GT-135</td><td>2</td><td class="price">10,490 ₽</td><td class="price">20,980 ₽</td></tr>
+                <tr><td>6</td><td>DH-CS4228-24GT-240</td><td>1</td><td class="price">16,500 ₽</td><td class="price">16,500 ₽</td></tr>
+                <tr class="total-row"><td colspan="4">Итого:</td><td class="price">319,330 ₽</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- СТРАНИЦА 3: КАЛЬКУЛЯТОР -->
+<div id="page3" class="page">
+    <div class="header">
+        <h1>🧮 Калькулятор стоимости</h1>
+        <p>Измените цены для пересчета</p>
+    </div>
+
+    <div class="card">
+        <h2>💵 Расчет стоимости</h2>
+        
+        <div class="calc-row">
+            <label>Камера 2Мп (DH-IPC-HDPW1230R1P)</label>
+            <input type="number" id="p1" value="2190" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 40 шт = <span id="s1">87,600</span> ₽</div>
+
+        <div class="calc-row">
+            <label>Камера 4Мп (DH-IPC-HDPW1431R1P-ZS)</label>
+            <input type="number" id="p2" value="6100" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 2 шт = <span id="s2">12,200</span> ₽</div>
+
+        <div class="calc-row">
+            <label>NVR 16 кан. (DHI-NVR2116HS)</label>
+            <input type="number" id="p3" value="6950" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 1 шт = <span id="s3">6,950</span> ₽</div>
+
+        <div class="calc-row">
+            <label>NVR 32 кан. (DHI-NVR4232)</label>
+            <input type="number" id="p4" value="13500" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 1 шт = <span id="s4">13,500</span> ₽</div>
+
+        <div class="calc-row">
+            <label>Свитч 16 портов (DH-CS4220-16GT)</label>
+            <input type="number" id="p5" value="10490" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 3 шт = <span id="s5">31,470</span> ₽</div>
+
+        <div class="calc-row">
+            <label>HDD 6TB (WD Purple)</label>
+            <input type="number" id="p6" value="14000" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 1 шт = <span id="s6">14,000</span> ₽</div>
+
+        <div class="calc-row">
+            <label>HDD 8TB (WD Purple)</label>
+            <input type="number" id="p7" value="17000" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 1 шт = <span id="s7">17,000</span> ₽</div>
+
+        <div class="calc-row">
+            <label>Кабель UTP (бухта 305м)</label>
+            <input type="number" id="p8" value="6500" oninput="calc()">
+        </div>
+        <div style="text-align: right; color: #666; font-size: 13px; margin-bottom: 10px;">× 3 шт = <span id="s8">19,500</span> ₽</div>
+
+        <div class="calc-total">
+            ИТОГО: <span id="total">202,220</span> ₽
+        </div>
+
+        <button class="btn" onclick="window.print()">🖨️ Печать / PDF</button>
+    </div>
+</div>
+
+<!-- СТРАНИЦА 4: КАБЕЛЬ -->
+<div id="page4" class="page">
+    <div class="header">
+        <h1>🔌 Расчет кабеля</h1>
+        <p>По данным из CablePlanner</p>
+    </div>
+
+    <div class="card">
+        <h2>📊 Расход по группам</h2>
+        <table>
+            <thead>
+                <tr><th>Группа</th><th>Камеры</th><th>Длина</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Свитч 1 (Столб)</td><td>К1-К14, К24-К27</td><td class="price">~415 м</td></tr>
+                <tr><td>Свитч 2 (Зал)</td><td>К15-К23, К28-К31</td><td class="price">~365 м</td></tr>
+                <tr><td>Свитч 3 (Склад)</td><td>К32-К42</td><td class="price">~145 м</td></tr>
+                <tr><td>Магистрали</td><td>Свитч↔Свитч, NVR</td><td class="price">~69 м</td></tr>
+                <tr style="background: #E8F5E9; font-weight: bold;">
+                    <td colspan="2">Итого (без запаса):</td>
+                    <td class="price">~994 м</td>
+                </tr>
+                <tr style="background: #FFF3E0; font-weight: bold;">
+                    <td colspan="2">С запасом 20%:</td>
+                    <td class="price">~1,193 м</td>
+                </tr>
+                <tr style="background: #E3F2FD; font-weight: bold; font-size: 16px;">
+                    <td colspan="2">Нужно купить:</td>
+                    <td class="price">3 бухты × 305м = 915м<br>+ запас</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>💡 Рекомендации</h2>
+        <ul style="line-height: 1.8; padding-left: 20px;">
+            <li>Кабель: <strong>UTP Cat5e 4×2×0.52 мм² (медь)</strong></li>
+            <li>Для прямых трасс по потолку в гофре</li>
+            <li>Запас 20% на петли, обрезки, ошибки</li>
+            <li>Коннекторы RJ45: 100 шт (с запасом)</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+// Данные из JSON
+const projectData = {
+    rooms: [
+        { minX: 1006.15, minY: 117.31, maxX: 1492.80, maxY: 419.13 },
+        { minX: 416.56, minY: -331.89, maxX: 1003.81, maxY: 414.45 },
+        { minX: 548.09, minY: -395.82, maxX: 774.03, maxY: -333.87 }
+    ],
+    cameras: [
+        {x: 1473.73, y: 134.41, name: "К1", g: 1}, {x: 1473.54, y: 187.82, name: "К2", g: 1},
+        {x: 1485.78, y: 245.66, name: "К3", g: 1}, {x: 1488.77, y: 266.60, name: "К4", g: 1},
+        {x: 1481.29, y: 306.98, name: "К5", g: 1}, {x: 1487.27, y: 327.92, name: "К6", g: 1},
+        {x: 1482.79, y: 359.33, name: "К7", g: 1}, {x: 1442.44, y: 123.19, name: "К8", g: 1},
+        {x: 1488.77, y: 383.26, name: "К9", g: 1}, {x: 1163.72, y: 136.22, name: "К10", g: 1},
+        {x: 1233.90, y: 136.22, name: "К11", g: 1}, {x: 1023.19, y: 333.98, name: "К12", g: 1},
+        {x: 1111.13, y: 398.62, name: "К13", g: 1}, {x: 653.78, y: -339.34, name: "К14", g: 3},
+        {x: 692.04, y: -341.16, name: "К15", g: 3}, {x: 421.45, y: 316.04, name: "К16", g: 2},
+        {x: 439.50, y: 401.67, name: "К17", g: 2}, {x: 421.45, y: 352.24, name: "К18", g: 2},
+        {x: 579.18, y: 261.74, name: "К19", g: 2}, {x: 584.35, y: 326.38, name: "К20", g: 2},
+        {x: 581.76, y: 380.68, name: "К21", g: 2}, {x: 752.42, y: 243.64, name: "К22", g: 2},
+        {x: 752.42, y: 300.53, name: "К23", g: 2}, {x: 749.84, y: 362.58, name: "К24", g: 2},
+        {x: 840.34, y: 367.75, name: "К25", g: 2}, {x: 825.85, y: 255.53, name: "К26", g: 2},
+        {x: 744.66, y: 181.58, name: "К27", g: 2}, {x: 579.18, y: 176.41, name: "К28", g: 2},
+        {x: 576.59, y: 129.87, name: "К29", g: 2}, {x: 744.66, y: 124.70, name: "К30", g: 2},
+        {x: 574.01, y: 54.88, name: "К31", g: 3}, {x: 740.33, y: 31.40, name: "К32", g: 3},
+        {x: 581.76, y: -14.93, name: "К33", g: 3}, {x: 744.66, y: -17.52, name: "К34", g: 3},
+        {x: 574.01, y: -56.30, name: "К35", g: 3}, {x: 571.42, y: -115.77, name: "К36", g: 3},
+        {x: 574.01, y: -175.24, name: "К37", g: 3}, {x: 566.25, y: -245.06, name: "К38", g: 3},
+        {x: 574.01, y: -304.53, name: "К39", g: 3}, {x: 744.66, y: -270.92, name: "К40", g: 3},
+        {x: 736.91, y: -167.49, name: "К41", g: 3}
+    ],
+    switches: [
+        {x: 1186.96, y: 245.41, name: "Свитч 1", color: "#f44336"},
+        {x: 653.41, y: 206.94, name: "Свитч 2", color: "#4CAF50"},
+        {x: 582.40, y: -348.12, name: "Свитч 3", color: "#9C27B0"}
+    ]
+};
+
+let scale = 1, transX = 0, transY = 0;
+
+// Инициализация карты
+function initMap() {
+    const g = document.getElementById('mapGroup');
+    const offsetX = 100, offsetY = 600;
+    
+    // Комнаты
+    projectData.rooms.forEach(r => {
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", r.minX + offsetX);
+        rect.setAttribute("y", r.minY + offsetY);
+        rect.setAttribute("width", r.maxX - r.minX);
+        rect.setAttribute("height", r.maxY - r.minY);
+        rect.setAttribute("fill", "#f5f5f5");
+        rect.setAttribute("stroke", "#9e9e9e");
+        rect.setAttribute("stroke-width", "2");
+        g.appendChild(rect);
+    });
+    
+    // Кабели
+    projectData.cameras.forEach(c => {
+        const sw = projectData.switches[c.g - 1];
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", c.x + offsetX);
+        line.setAttribute("y1", c.y + offsetY);
+        line.setAttribute("x2", sw.x + offsetX);
+        line.setAttribute("y2", sw.y + offsetY);
+        line.setAttribute("stroke", ["#ffcdd2", "#c8e6c9", "#e1bee7"][c.g - 1]);
+        line.setAttribute("stroke-width", "1");
+        line.setAttribute("opacity", "0.4");
+        g.appendChild(line);
+    });
+    
+    // Свитчи
+    projectData.switches.forEach(s => {
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", s.x + offsetX - 20);
+        rect.setAttribute("y", s.y + offsetY - 20);
+        rect.setAttribute("width", "40");
+        rect.setAttribute("height", "40");
+        rect.setAttribute("fill", s.color);
+        rect.setAttribute("rx", "8");
+        g.appendChild(rect);
+        
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", s.x + offsetX);
+        text.setAttribute("y", s.y + offsetY + 5);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("fill", "white");
+        text.setAttribute("font-size", "10");
+        text.setAttribute("font-weight", "bold");
+        text.textContent = s.name;
+        g.appendChild(text);
+    });
+    
+    // Камеры
+    projectData.cameras.forEach(c => {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", c.x + offsetX);
+        circle.setAttribute("cy", c.y + offsetY);
+        circle.setAttribute("r", "5");
+        circle.setAttribute("fill", ["#f44336", "#4CAF50", "#9C27B0"][c.g - 1]);
+        g.appendChild(circle);
+        
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", c.x + offsetX + 8);
+        text.setAttribute("y", c.y + offsetY + 4);
+        text.setAttribute("font-size", "10");
+        text.setAttribute("fill", "#333");
+        text.textContent = c.name;
+        g.appendChild(text);
+    });
+}
+
+// Навигация
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.closest('button').classList.add('active');
+    if (id === 'page1') initMap();
+}
+
+// Зум карты
+function zoom(f) {
+    scale *= f;
+    updateTransform();
+}
+
+function resetView() {
+    scale = 1;
+    transX = 0;
+    transY = 0;
+    updateTransform();
+}
+
+function updateTransform() {
+    const g = document.getElementById('mapGroup');
+    g.style.transform = `translate(${transX}px, ${transY}px) scale(${scale})`;
+    g.style.transformOrigin = "center center";
+}
+
+// Drag карты
+let isDrag = false, startX, startY;
+const svg = document.getElementById('svgCanvas');
+
+svg.addEventListener('mousedown', e => {
+    isDrag = true;
+    startX = e.clientX - transX;
+    startY = e.clientY - transY;
+});
+
+window.addEventListener('mouseup', () => isDrag = false);
+window.addEventListener('mousemove', e => {
+    if (!isDrag) return;
+    transX = e.clientX - startX;
+    transY = e.clientY - startY;
+    updateTransform();
+});
+
+// Калькулятор
+function calc() {
+    const q = (id, qty) => parseFloat(document.getElementById(id).value) * qty;
+    const s = (id, val) => document.getElementById(id).textContent = val.toLocaleString('ru-RU');
+    
+    s('s1', q('p1', 40));
+    s('s2', q('p2', 2));
+    s('s3', q('p3', 1));
+    s('s4', q('p4', 1));
+    s('s5', q('p5', 3));
+    s('s6', q('p6', 1));
+    s('s7', q('p7', 1));
+    s('s8', q('p8', 3));
+    
+    const total = q('p1',40) + q('p2',2) + q('p3',1) + q('p4',1) + q('p5',3) + q('p6',1) + q('p7',1) + q('p8',3);
+    document.getElementById('total').textContent = total.toLocaleString('ru-RU');
+}
+
+calc();
+</script>
+
+</body>
+</html>
