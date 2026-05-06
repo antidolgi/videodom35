@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор видеонаблюдения</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 5px;
+            font-size: 1.8em;
+        }
+        .subtitle {
+            color: #636e72;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        .section h3 {
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 120px 120px 120px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .input-row.header {
+            background: #1a1a2e;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        .input-row.header span {
+            padding: 5px 0;
+        }
+        .input-row span:first-child {
+            font-size: 0.9em;
+        }
+        .input-row input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.95em;
+            text-align: right;
+            transition: border-color 0.2s;
+        }
+        .input-row input:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+        .input-row .subtotal {
+            font-weight: bold;
+            color: #e94560;
+            text-align: right;
+            padding: 8px 10px;
+            font-size: 0.95em;
+        }
+        .add-btn {
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .add-btn:hover { background: #00a381; }
+        .remove-btn {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .remove-btn:hover { background: #d63031; }
+        .total-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .total-section h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.1em;
+        }
+        .total-row:last-child {
+            border-bottom: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fdcb6e;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.3);
+        }
+        .action-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .btn-pdf { background: #e94560; color: white; }
+        .btn-excel { background: #00b894; color: white; }
+        .btn-save { background: #0984e3; color: white; }
+        .btn-load { background: #fdcb6e; color: #1a1a2e; }
+        .btn-reset { background: #636e72; color: white; }
+
+        .cable-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .cable-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e94560;
+        }
+        .cable-card h4 { font-size: 0.95em; color: #1a1a2e; margin-bottom: 5px; }
+        .cable-card .val { font-size: 1.5em; font-weight: bold; color: #e94560; }
+        .cable-card .unit { font-size: 0.5em; color: #636e72; }
+
+        .preset-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .preset-btn {
+            padding: 8px 16px;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+        .preset-btn:hover, .preset-btn.active {
+            border-color: #e94560;
+            color: #e94560;
+            background: #ffe0e6;
+        }
+
+        @media print {
+            body { background: white; }
+            .no-print { display: none; }
+            .container { box-shadow: none; }
+        }
+
+        .notes {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+        .notes h4 { margin-bottom: 8px; color: #856404; }
+        .notes textarea {
+            width: 100%;
+            min-height: 80px;
+            border: 1px solid #ffc107;
+            border-radius: 6px;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 0.9em;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 Калькулятор видеонаблюдения</h1>
+        <p class="subtitle">Вводи цены поставщиков — мгновенный расчёт. Сохраняй в PDF, Excel или отправляй мне для оформления.</p>
+
+        <div class="no-print">
+            <div class="preset-btns">
+                <button class="preset-btn active" onclick="loadPreset('default')">📋 Текущий проект</button>
+                <button class="preset-btn" onclick="loadPreset('budget')">💰 Бюджетное</button>
+                <button class="preset-btn" onclick="loadPreset('optimal')">⭐ Оптимальное</button>
+            </div>
+        </div>
+
+        <!-- Камеры -->
+        <div class="section">
+            <h3>📹 Камеры</h3>
+            <div id="cameras-list">
+                <div class="input-row header">
+                    <span>Наименование</span>
+                    <span>Кол-во</span>
+                    <span>Цена (₽)</span>
+                    <span>Сумма</span>
+                </div>
+                <div class="input-row camera-row">
+                    <span>DH-IPC-HDPW1230R1P (2Мп основная)</span>
+                    <input type="number" value="39" onchange="recalc()" class="qty">
+                    <input type="number" value="2190" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+                <div class="input-row camera-row">
+                    <span>DH-IPC-HDPW1431R1P-ZS (4Мп касса)</span>
+                    <input type="number" value="2" onchange="recalc()" class="qty">
+                    <input type="number" value="6100" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+            </div>
+            <button class="add-btn no-print" onclick="addCamera()">+ Добавить камеру</button>
+        </div>
+
+        <!-- Регистраторы -->
+        <div class="section">
+            <h3>🗄️ Регистраторы</h3>
+            <div id="nvr-list">
+                <div class="input-row header">
+                    <span>Наименование</span>
+                    <span>Кол-во</span>
+                    <span>Цена (₽)</span>
+                    <span>Сумма</span>
+                </div>
+                <div class="input-row nvr-row">
+                    <span>DHI-NVR2116HS-4KS3 (16 кан.)</span>
+                    <input type="number" value="1" onchange="recalc()" class="qty">
+                    <input type="number" value="6950" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+                <div class="input-row nvr-row">
+                    <span>DHI-NVR4232-4KS3 (32 кан.)</span>
+                    <input type="number" value="1" onchange="recalc()" class="qty">
+                    <input type="number" value="13500" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Коммутаторы -->
+        <div class="section">
+            <h3>🔌 Коммутаторы</h3>
+            <div id="switch-list">
+                <div class="input-row header">
+                    <span>Наименование</span>
+                    <span>Кол-во</span>
+                    <span>Цена (₽)</span>
+                    <span>Сумма</span>
+                </div>
+                <div class="input-row switch-row">
+                    <span>DH-CS4220-16GT-135 (16 портов PoE)</span>
+                    <input type="number" value="3" onchange="recalc()" class="qty">
+                    <input type="number" value="10490" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HDD -->
+        <div class="section">
+            <h3>💾 Жёсткие диски</h3>
+            <div id="hdd-list">
+                <div class="input-row header">
+                    <span>Наименование</span>
+                    <span>Кол-во</span>
+                    <span>Цена (₽)</span>
+                    <span>Сумма</span>
+                </div>
+                <div class="input-row hdd-row">
+                    <span>WD Purple 6 ТБ (WD60PURX)</span>
+                    <input type="number" value="1" onchange="recalc()" class="qty">
+                    <input type="number" value="14000" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+                <div class="input-row hdd-row">
+                    <span>WD Purple 8 ТБ (WD80PURX)</span>
+                    <input type="number" value="1" onchange="recalc()" class="qty">
+                    <input type="number" value="17000" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кабель и расходники -->
+        <div class="section">
+            <h3>🔌 Кабель и расходники</h3>
+            <div id="cable-list">
+                <div class="input-row header">
+                    <span>Наименование</span>
+                    <span>Кол-во</span>
+                    <span>Цена (₽)</span>
+                    <span>Сумма</span>
+                </div>
+                <div class="input-row cable-row">
+                    <span>UTP Cat5e 4×2×0.52 медь, 305м (бухта)</span>
+                    <input type="number" value="3" onchange="recalc()" class="qty">
+                    <input type="number" value="6500" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+                <div class="input-row cable-row">
+                    <span>Расходники (коннекторы, стяжки, бирки)</span>
+                    <input type="number" value="1" onchange="recalc()" class="qty">
+                    <input type="number" value="1500" onchange="recalc()" class="price">
+                    <div class="subtotal">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Расход кабеля -->
+        <div class="section">
+            <h3>📏 Расход кабеля</h3>
+            <div class="cable-info">
+                <div class="cable-card">
+                    <h4>Свитч 1 (Столб)</h4>
+                    <div class="val" id="cable1">415</div>
+                    <div class="unit">метров</div>
+                </div>
+                <div class="cable-card">
+                    <h4>Свитч 2 (Зал)</h4>
+                    <div class="val" id="cable2">365</div>
+                    <div class="unit">метров</div>
+                </div>
+                <div class="cable-card">
+                    <h4>Свитч 3 (Склад)</h4>
+                    <div class="val" id="cable3">145</div>
+                    <div class="unit">метров</div>
+                </div>
+                <div class="cable-card">
+                    <h4>Магистрали</h4>
+                    <div class="val" id="cable4">69</div>
+                    <div class="unit">метров</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Заметки -->
+        <div class="notes">
+            <h4>📝 Заметки</h4>
+            <textarea placeholder="Впиши примечания, пожелания заказчика, особенности монтажа..."></textarea>
+        </div>
+
+        <!-- Итого -->
+        <div class="total-section">
+            <h3>💰 Итого</h3>
+            <div class="total-row">
+                <span>Камеры:</span>
+                <span id="total-cameras">0 ₽</span>
+            </div>
+            <div class="total-row">
+                <span>Регистраторы:</span>
+                <span id="total-nvr">0 ₽</span>
+            </div>
+            <div class="total-row">
+                <span>Коммутаторы:</span>
+                <span id="total-switch">0 ₽</span>
+            </div>
+            <div class="total-row">
+                <span>Диски:</span>
+                <span id="total-hdd">0 ₽</span>
+            </div>
+            <div class="total-row">
+                <span>Кабель + расходники:</span>
+                <span id="total-cable">0 ₽</span>
+            </div>
+            <div class="total-row">
+                <span>📦 ВСЕГО:</span>
+                <span id="grand-total">0 ₽</span>
+            </div>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="action-btns no-print">
+            <button class="action-btn btn-pdf" onclick="window.print()">️ Печать / PDF</button>
+            <button class="action-btn btn-excel" onclick="exportCSV()">📊 Экспорт в Excel</button>
+            <button class="action-btn btn-save" onclick="saveData()">💾 Сохранить</button>
+            <button class="action-btn btn-load" onclick="loadData()">📂 Загрузить</button>
+            <button class="action-btn btn-reset" onclick="resetData()">🔄 Сбросить</button>
+        </div>
+    </div>
+
+    <script>
+        function formatMoney(num) {
+            return new Intl.NumberFormat('ru-RU').format(Math.round(num)) + ' ₽';
+        }
+
+        function recalc() {
+            let totalCameras = 0, totalNVR = 0, totalSwitch = 0, totalHDD = 0, totalCable = 0;
+
+            // Камеры
+            document.querySelectorAll('.camera-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const price = parseFloat(row.querySelector('.price').value) || 0;
+                const sum = qty * price;
+                row.querySelector('.subtotal').textContent = formatMoney(sum);
+                totalCameras += sum;
+            });
+
+            // NVR
+            document.querySelectorAll('.nvr-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const price = parseFloat(row.querySelector('.price').value) || 0;
+                const sum = qty * price;
+                row.querySelector('.subtotal').textContent = formatMoney(sum);
+                totalNVR += sum;
+            });
+
+            // Свитчи
+            document.querySelectorAll('.switch-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const price = parseFloat(row.querySelector('.price').value) || 0;
+                const sum = qty * price;
+                row.querySelector('.subtotal').textContent = formatMoney(sum);
+                totalSwitch += sum;
+            });
+
+            // HDD
+            document.querySelectorAll('.hdd-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const price = parseFloat(row.querySelector('.price').value) || 0;
+                const sum = qty * price;
+                row.querySelector('.subtotal').textContent = formatMoney(sum);
+                totalHDD += sum;
+            });
+
+            // Кабель
+            document.querySelectorAll('.cable-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.qty').value) || 0;
+                const price = parseFloat(row.querySelector('.price').value) || 0;
+                const sum = qty * price;
+                row.querySelector('.subtotal').textContent = formatMoney(sum);
+                totalCable += sum;
+            });
+
+            // Итоги
+            document.getElementById('total-cameras').textContent = formatMoney(totalCameras);
+            document.getElementById('total-nvr').textContent = formatMoney(totalNVR);
+            document.getElementById('total-switch').textContent = formatMoney(totalSwitch);
+            document.getElementById('total-hdd').textContent = formatMoney(totalHDD);
+            document.getElementById('total-cable').textContent = formatMoney(totalCable);
+            document.getElementById('grand-total').textContent = formatMoney(totalCameras + totalNVR + totalSwitch + totalHDD + totalCable);
+        }
+
+        function addCamera() {
+            const container = document.getElementById('cameras-list');
+            const row = document.createElement('div');
+            row.className = 'input-row camera-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Название камеры" style="padding: 8px; border: 2px solid #e9ecef; border-radius: 6px;">
+                <input type="number" value="1" onchange="recalc()" class="qty">
+                <input type="number" value="0" onchange="recalc()" class="price">
+                <div class="subtotal">0</div>
+            `;
+            container.appendChild(row);
+        }
+
+        function exportCSV() {
+            let csv = 'Наименование;Кол-во;Цена;Сумма\n';
+            
+            document.querySelectorAll('.camera-row, .nvr-row, .switch-row, .hdd-row, .cable-row').forEach(row => {
+                const name = row.querySelector('span').textContent;
+                const qty = row.querySelector('.qty').value;
+                const price = row.querySelector('.price').value;
+                const subtotal = row.querySelector('.subtotal').textContent;
+                csv += `${name};${qty};${price};${subtotal}\n`;
+            });
+
+            csv += `\n;;ИТОГО;${document.getElementById('grand-total').textContent}\n`;
+
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'calculation_' + new Date().toISOString().slice(0,10) + '.csv';
+            link.click();
+        }
+
+        function saveData() {
+            const data = {};
+            document.querySelectorAll('.camera-row, .nvr-row, .switch-row, .hdd-row, .cable-row').forEach((row, i) => {
+                const name = row.querySelector('span').textContent || row.querySelector('input[type="text"]')?.value || '';
+                const qty = row.querySelector('.qty').value;
+                const price = row.querySelector('.price').value;
+                data[i] = { name, qty, price };
+            });
+            localStorage.setItem('cctv_calc_data', JSON.stringify(data));
+            alert('✅ Данные сохранены в браузере!');
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('cctv_calc_data');
+            if (!saved) {
+                alert('❌ Нет сохранённых данных');
+                return;
+            }
+            const data = JSON.parse(saved);
+            document.querySelectorAll('.camera-row, .nvr-row, .switch-row, .hdd-row, .cable-row').forEach((row, i) => {
+                if (data[i]) {
+                    row.querySelector('.qty').value = data[i].qty;
+                    row.querySelector('.price').value = data[i].price;
+                }
+            });
+            recalc();
+            alert('✅ Данные загружены!');
+        }
+
+        function resetData() {
+            if (confirm('Сбросить все данные?')) {
+                document.querySelectorAll('input[type="number"]').forEach(input => {
+                    input.value = input.defaultValue || 0;
+                });
+                recalc();
+            }
+        }
+
+        function loadPreset(preset) {
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Пресеты можно добавить сюда
+            if (preset === 'budget') {
+                // Бюджетные цены
+            } else if (preset === 'optimal') {
+                // Оптимальные цены
+            }
+            recalc();
+        }
+
+        // Инициализация
+        recalc();
+    </script>
+</body>
+</html>
