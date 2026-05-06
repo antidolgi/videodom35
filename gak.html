@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Схема подключения видеонаблюдения</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+            background: #fff;
+            border-radius: 8px;
+        }
+        .box {
+            fill: white;
+            stroke: #3498db;
+            stroke-width: 2;
+            rx: 8;
+        }
+        .box-nvr {
+            fill: #fff3cd;
+            stroke: #ffc107;
+            stroke-width: 2;
+            rx: 8;
+        }
+        .box-switch {
+            fill: #d5f4e6;
+            stroke: #27ae60;
+            stroke-width: 2;
+            rx: 8;
+        }
+        .box-monitor {
+            fill: #e8f4fd;
+            stroke: #3498db;
+            stroke-width: 2;
+            rx: 8;
+        }
+        .cable {
+            stroke: #95a5a6;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 5,3;
+        }
+        .cable-main {
+            stroke: #e74c3c;
+            stroke-width: 3;
+            fill: none;
+        }
+        .label {
+            font-size: 12px;
+            fill: #2c3e50;
+            font-weight: 500;
+        }
+        .label-small {
+            font-size: 10px;
+            fill: #7f8c8d;
+        }
+        .camera-group {
+            fill: #ecf0f1;
+            stroke: #bdc3c7;
+            stroke-width: 1;
+            rx: 4;
+        }
+        .legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
+        .note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📡 Схема подключения видеонаблюдения</h1>
+        <p class="subtitle">Магазин одежды • 42 камеры • 2 регистратора • 3 коммутатора</p>
+        
+        <svg viewBox="0 0 1100 700">
+            <!-- === СВИТЧ 1 (СТОЛБ) === -->
+            <rect x="50" y="80" width="180" height="100" class="box-switch"/>
+            <text x="140" y="120" text-anchor="middle" class="label" font-weight="bold">🔌 СВИТЧ 1</text>
+            <text x="140" y="140" text-anchor="middle" class="label-small">Столб / Вход</text>
+            <text x="140" y="160" text-anchor="middle" class="label-small">16 портов • 135Вт PoE</text>
+            
+            <!-- Камеры группы 1 -->
+            <rect x="20" y="200" width="230" height="60" class="camera-group"/>
+            <text x="135" y="225" text-anchor="middle" class="label-small">📹 Камеры: К1-К9, К10-К11, К12-К14, К24-К25</text>
+            <text x="135" y="245" text-anchor="middle" class="label-small">16 камер • среднее расстояние 20-25м</text>
+            <line x1="140" y1="180" x2="140" y2="200" class="cable"/>
+            
+            <!-- NVR 1 и Монитор 1 -->
+            <rect x="280" y="90" width="140" height="80" class="box-nvr"/>
+            <text x="350" y="120" text-anchor="middle" class="label" font-weight="bold">🗄️ NVR 1</text>
+            <text x="350" y="140" text-anchor="middle" class="label-small">16 каналов • 1×HDD</text>
+            <text x="350" y="155" text-anchor="middle" class="label-small">6 ТБ архив</text>
+            
+            <rect x="280" y="190" width="140" height="60" class="box-monitor"/>
+            <text x="350" y="215" text-anchor="middle" class="label" font-weight="bold">🖥️ Монитор 1</text>
+            <text x="350" y="235" text-anchor="middle" class="label-small">Показывает: ВСЕ, кроме К10,К11</text>
+            
+            <!-- Соединения Свитч 1 -->
+            <line x1="230" y1="130" x2="280" y2="130" class="cable-main"/>
+            <text x="255" y="120" text-anchor="middle" class="label-small" fill="#e74c3c">патч-корд</text>
+            <line x1="350" y1="170" x2="350" y2="190" class="cable"/>
+            
+            <!-- === МАГИСТРАЛЬ 1 → 2 === -->
+            <line x1="140" y1="260" x2="140" y2="340" class="cable-main"/>
+            <text x="160" y="300" class="label-small" fill="#e74c3c">UTP Cat5e • ~30м</text>
+            
+            <!-- === СВИТЧ 2 (ЗАЛ) === -->
+            <rect x="50" y="340" width="180" height="100" class="box-switch"/>
+            <text x="140" y="380" text-anchor="middle" class="label" font-weight="bold">🔌 СВИТЧ 2</text>
+            <text x="140" y="400" text-anchor="middle" class="label-small">Зал / Примерочные</text>
+            <text x="140" y="420" text-anchor="middle" class="label-small">16 портов • 135Вт PoE</text>
+            
+            <!-- Камеры группы 2 -->
+            <rect x="20" y="460" width="230" height="60" class="camera-group"/>
+            <text x="135" y="485" text-anchor="middle" class="label-small">📹 Камеры: К15-К23, К26-К27, К28-К31</text>
+            <text x="135" y="505" text-anchor="middle" class="label-small">15 камер • среднее расстояние 20-30м</text>
+            <line x1="140" y1="440" x2="140" y2="460" class="cable"/>
+            
+            <!-- === МАГИСТРАЛЬ 2 → 3 === -->
+            <line x1="140" y1="520" x2="140" y2="600" class="cable-main"/>
+            <text x="160" y="560" class="label-small" fill="#e74c3c">UTP Cat5e • ~30м</text>
+            
+            <!-- === СВИТЧ 3 (СКЛАД) === -->
+            <rect x="50" y="600" width="180" height="100" class="box-switch"/>
+            <text x="140" y="640" text-anchor="middle" class="label" font-weight="bold">🔌 СВИТЧ 3</text>
+            <text x="140" y="660" text-anchor="middle" class="label-small">Склад</text>
+            <text x="140" y="680" text-anchor="middle" class="label-small">16 портов • 135Вт PoE</text>
+            
+            <!-- Камеры группы 3 -->
+            <rect x="260" y="610" width="230" height="60" class="camera-group"/>
+            <text x="375" y="635" text-anchor="middle" class="label-small">📹 Камеры: К32-К35, К36-К42</text>
+            <text x="375" y="655" text-anchor="middle" class="label-small">11 камер • среднее расстояние 10-15м</text>
+            <line x1="230" y1="640" x2="260" y2="640" class="cable"/>
+            
+            <!-- NVR 2 и Монитор 2 -->
+            <rect x="520" y="610" width="140" height="80" class="box-nvr"/>
+            <text x="590" y="640" text-anchor="middle" class="label" font-weight="bold">🗄️ NVR 2</text>
+            <text x="590" y="660" text-anchor="middle" class="label-small">32 канала • 2×HDD</text>
+            <text x="590" y="675" text-anchor="middle" class="label-small">8 ТБ архив</text>
+            
+            <rect x="520" y="510" width="140" height="60" class="box-monitor"/>
+            <text x="590" y="535" text-anchor="middle" class="label" font-weight="bold">🖥️ Монитор 2</text>
+            <text x="590" y="555" text-anchor="middle" class="label-small">Показывает: ВСЕ 42 камеры</text>
+            
+            <!-- Соединения Свитч 3 -->
+            <line x1="230" y1="640" x2="520" y2="640" class="cable-main"/>
+            <text x="375" y="630" text-anchor="middle" class="label-small" fill="#e74c3c">патч-корд</text>
+            <line x1="590" y1="610" x2="590" y2="570" class="cable"/>
+            
+            <!-- === СВЯЗЬ МЕЖДУ NVR === -->
+            <path d="M 420 130 Q 480 130, 480 370 Q 480 610, 520 640" class="cable" stroke="#9b59b6"/>
+            <text x="500" y="370" class="label-small" fill="#9b59b6" transform="rotate(90, 500, 370)">Сеть: NVR1 ↔ NVR2</text>
+            
+            <!-- === РОУТЕР (опционально) === -->
+            <rect x="700" y="340" width="120" height="70" class="box" stroke="#9b59b6"/>
+            <text x="760" y="370" text-anchor="middle" class="label" font-weight="bold">📡 Роутер 4G</text>
+            <text x="760" y="390" text-anchor="middle" class="label-small">(опционально)</text>
+            <line x1="660" y1="640" x2="700" y2="375" class="cable" stroke="#9b59b6"/>
+            <text x="720" y="500" class="label-small" fill="#9b59b6">для просмотра с телефона</text>
+            
+            <!-- === ЛЕГЕНДА === -->
+            <g transform="translate(850, 80)">
+                <rect x="0" y="0" width="230" height="280" fill="#f8f9fa" stroke="#dee2e6" rx="8"/>
+                <text x="115" y="25" text-anchor="middle" class="label" font-weight="bold">📋 Легенда</text>
+                
+                <rect x="10" y="40" width="30" height="20" class="box-switch"/>
+                <text x="50" y="53" class="label-small">Коммутатор PoE</text>
+                
+                <rect x="10" y="70" width="30" height="20" class="box-nvr"/>
+                <text x="50" y="83" class="label-small">Видеорегистратор</text>
+                
+                <rect x="10" y="100" width="30" height="20" class="box-monitor"/>
+                <text x="50" y="113" class="label-small">Монитор</text>
+                
+                <line x1="10" y1="135" x2="40" y2="135" class="cable-main"/>
+                <text x="50" y="138" class="label-small">Магистраль (30м)</text>
+                
+                <line x1="10" y1="155" x2="40" y2="155" class="cable"/>
+                <text x="50" y="158" class="label-small">Подключение камеры</text>
+                
+                <line x1="10" y1="175" x2="40" y2="175" class="cable" stroke="#9b59b6"/>
+                <text x="50" y="178" class="label-small">Сетевое соединение</text>
+                
+                <rect x="10" y="195" width="30" height="20" class="camera-group"/>
+                <text x="50" y="208" class="label-small">Группа камер</text>
+                
+                <text x="10" y="240" class="label-small" font-weight="bold">Кабель:</text>
+                <text x="10" y="258" class="label-small">UTP Cat5e, медь, 0.52мм²</text>
+                <text x="10" y="273" class="label-small">Длина: до 100м без потерь</text>
+            </g>
+        </svg>
+        
+        <div class="legend">
+            <strong>✅ Ключевые моменты:</strong>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #d5f4e6;"></div>
+                <span><strong>3 одинаковых свитча</strong> по 16 портов — проще в замене и настройке</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fff3cd;"></div>
+                <span><strong>2 регистратора</strong> соединены сетевым кабелем — видят камеры друг друга</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e8f4fd;"></div>
+                <span><strong>Монитор 1 (столб)</strong>: 40 камер (все, кроме кассы К10,К11)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e8f4fd;"></div>
+                <span><strong>Монитор 2 (склад)</strong>: все 42 камеры</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #fff;"></div>
+                <span><strong>Один тип кабеля</strong> UTP Cat5e для всего — и камеры, и магистрали</span>
+            </div>
+        </div>
+        
+        <div class="note">
+            <strong>💡 Как объяснить заказчику:</strong><br>
+            «Мы используем цепочку из трёх коммутаторов, чтобы сэкономить на кабеле и упростить монтаж. 
+            Камеры подключаются к ближайшему свитчу короткими отрезками, а свитчи соединяются между собой 
+            одним кабелем. Регистраторы "видят" все камеры через сеть, поэтому на любом мониторе можно 
+            вывести нужную картинку. Кабель один на всё — витая пара, работает до 100 метров без потерь.»
+        </div>
+    </div>
+</body>
+</html>
