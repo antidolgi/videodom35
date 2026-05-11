@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Собеседование: M8 & GALLEX35</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0B1A1F;
+            color: #E0E0E0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #11262E;
+            border-radius: 24px;
+            padding: 30px 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #E63946, #FF8C42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #A0B4BE;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        .accordion {
+            margin-bottom: 16px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #1A3A44;
+            border: 1px solid #2A5A64;
+        }
+        .accordion-header {
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1A3A44;
+            color: #F0F0F0;
+            transition: background 0.2s;
+        }
+        .accordion-header:hover {
+            background: #234B55;
+        }
+        .accordion-header .icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+            background: #0F2E36;
+            padding: 0 20px;
+            color: #D0DEE5;
+        }
+        .accordion.active .accordion-content {
+            max-height: 2000px; /* достаточная высота */
+            padding: 20px;
+        }
+        .accordion.active .icon {
+            transform: rotate(45deg);
+        }
+        .roadmap-table, .questions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        .roadmap-table th {
+            background: #234B55;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 500;
+        }
+        .roadmap-table td {
+            padding: 12px;
+            border-bottom: 1px solid #2A4A54;
+            vertical-align: top;
+        }
+        ul {
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        .highlight {
+            color: #FF8C42;
+            font-weight: 600;
+        }
+        .tag {
+            background: #E63946;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        .divider {
+            border-top: 1px solid #2A5A64;
+            margin: 20px 0;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Собеседование: Руководитель маркетинга</h1>
+        <div class="subtitle">Детейлинг студия M8 + EVA коврики GALLEX35</div>
+
+        <!-- Блок 1: Обязанности -->
+        <div class="accordion">
+            <div class="accordion-header">
+                📋 Мои обязанности как руководителя маркетинга
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p>На основе вакансии и здравого смысла вот что я буду делать:</p>
+                <ul>
+                    <li><span class="highlight">Авито</span> — полное ведение своими руками: создание и оформление объявлений для детейлинга и ковров, тарифы «Выделенное», аналитика откликов, работа с возражениями, тестирование заголовков и цен.</li>
+                    <li><span class="highlight">Яндекс.Директ</span> — настройка сам или управление аутсорсом. Чёткое ТЗ, контроль KPI (цена клика, конверсия в заявку), распределение бюджета.</li>
+                    <li><span class="highlight">Яндекс.Карты</span> — оформление карточек, ответы на отзывы, сторис, фото, акции.</li>
+                    <li><span class="highlight">Соцсети (ВК)</span> — контент-план, посты, сторис, вовлечение, ответы подписчикам, запуск таргета.</li>
+                    <li><span class="highlight">Видео / релизы</span> — идеи для оператора, монтаж (Premiere Pro / DaVinci), короткие ролики для VK клипов и Reels.</li>
+                    <li><span class="highlight">Сайты + нейросети</span> — создание и обновление лендингов (GitHub, Tilda), генерация контента через ИИ (ChatGPT, Midjourney), оптимизация SEO.</li>
+                    <li><span class="highlight">Аналитика</span> — сбор данных, построение воронки продаж, внедрение UTM-меток и коллтрекинга, еженедельная отчётность.</li>
+                    <li><span class="highlight">Контроль подрядчиков</span> — если что-то передаётся на аутсорс, я ставлю задачу, принимаю результат и отвечаю за итоговые показатели.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 2: Дорожная карта Детейлинг М8 -->
+        <div class="accordion">
+            <div class="accordion-header">
+                🧽 Дорожная карта: Детейлинг студия М8
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <table class="roadmap-table">
+                    <tr><th>Период</th><th>Действия</th><th>Ожидаемый результат</th></tr>
+                    <tr><td>Неделя 1-2</td>
+                        <td>
+                            • Аудит текущих объявлений на Авито и карточки Яндекс.Карт<br>
+                            • Запуск лендинга (мой прототип <em>antidolgi.github.io/studioM8/</em>) на своём домене<br>
+                            • Создание шаблонов сообщений для быстрых ответов
+                        </td>
+                        <td>Появление сайта, рост доверия, готовность к рекламе</td>
+                    </tr>
+                    <tr><td>Неделя 3-4</td>
+                        <td>
+                            • Активация таргета ВК на автовладельцев (гео Вологда +20км)<br>
+                            • Рассылка в ВК по подписчикам «Бесплатная диагностика ЛКП»<br>
+                            • Подготовка 3-5 коротких видео «до/после» для VK Клипов
+                        </td>
+                        <td>Первичный поток заявок, оживление соцсетей</td>
+                    </tr>
+                    <tr><td>Месяц 2</td>
+                        <td>
+                            • Яндекс.Директ на коммерческие запросы (детейлинг Вологда, химчистка салона цена и т.д.)<br>
+                            • Запуск акции «Приведи друга – скидка 15%»<br>
+                            • Внедрение страницы «Спасибо» с промокодом за репост
+                        </td>
+                        <td>Рост лидов, сарафанное радио</td>
+                    </tr>
+                    <tr><td>Месяц 3</td>
+                        <td>
+                            • Коллтрекинг, сквозная аналитика<br>
+                            • Оптимизация бюджета: отключение неэффективных каналов<br>
+                            • Подготовка лендинга под отдельные услуги (керамика, бронь)
+                        </td>
+                        <td>Прозрачная окупаемость маркетинга</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Блок 3: Дорожная карта EVA коврики GALLEX35 -->
+        <div class="accordion">
+            <div class="accordion-header">
+                🚗 Дорожная карта: EVA коврики GALLEX35
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <table class="roadmap-table">
+                    <tr><th>Период</th><th>Действия</th><th>Ожидаемый результат</th></tr>
+                    <tr><td>Неделя 1-2</td>
+                        <td>
+                            • Восстановить сайт gallex35.ru (мой прототип уже готов)<br>
+                            • Синхронизировать цветовую палитру на сайте и в ВК<br>
+                            • Обновить Авито-объявления: добавить видео, конструктор цветов в описании
+                        </td>
+                        <td>Работающий сайт, современная витрина</td>
+                    </tr>
+                    <tr><td>Неделя 3-4</td>
+                        <td>
+                            • Запуск таргетинга на владельцев авто конкретных марок (из базы лекал)<br>
+                            • Кросс-промо с детейлингом: «Закажи коврики – получи скидку на химчистку»<br>
+                            • SEO-оптимизация: «купить EVA коврики Вологда», «коврики 3D с бортами»
+                        </td>
+                        <td>Перекрёстные продажи, лиды из поиска</td>
+                    </tr>
+                    <tr><td>Месяц 2</td>
+                        <td>
+                            • Настройка рекламы на оптовые заказы (автосалоны, детейлинг-центры)<br>
+                            • Создание email-рассылки (восстановление брошенных заявок)<br>
+                            • Публикация отзывов с фотографиями в карточках товаров
+                        </td>
+                        <td>Выход на B2B-сегмент, повторные продажи</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Блок 4: О себе и опыт в General Detailing -->
+        <div class="accordion">
+            <div class="accordion-header">
+                🎤 Что говорить о себе + ОПЫТ В GENERAL DETAILING
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <p><span class="highlight">Ключевая история:</span> «Помимо 12 лет в маркетинге, у меня есть прямой опыт в детейлинг-бизнесе. Несколько лет назад я вместе с другом открывал компанию <strong>General Detailing</strong>. Я был партнёром и отвечал за привлечение клиентов, сайт, Авито, соцсети. К сожалению, мы закрылись (можно честно назвать причину: не сошлись в операционке, пандемия, или просто «поняли, что партнёрство не сработало»). Но этот опыт дал мне глубокое понимание внутренней кухни детейлинга: боли клиентов, сезонность, маржинальность услуг, реалии мойки и цеха. Поэтому в вашу студию я захожу не как теоретик, а как человек, который уже варился в этом».</p>
+                <p>Далее строю мост к вакансии: «Сейчас я сфокусирован на маркетинге, упаковке бизнеса, и хочу применить этот сплав знаний для системного роста M8 и Gallex».</p>
+                <div class="divider"></div>
+                <p><strong>Как отвечать на вопрос «Почему ушли из General Detailing?»</strong><br>
+                — «Мы запустились с другом, я занимался маркетингом, он операционкой. Через полтора года оказалось что бывший владелец специально продал студию чтобы мы ее подняли и потом он решил ее забрать поднятием аренды, ну мы и ушли с клиентской базой вместе))). Я вышел с огромным багажом знаний о клиентском сервисе в автобизнесе. Теперь хочу применить это в стабильной компании, где смогу отвечать только за маркетинг и не распыляться на всё подряд».</p>
+            </div>
+        </div>
+
+        <!-- Блок 5: Вопросы, которые задам я -->
+        <div class="accordion">
+            <div class="accordion-header">
+                ❓ Мои вопросы работодателю
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <ul>
+                    <li><span class="highlight">Какие финансовые цели стоят на следующие 6 месяцев? Как маркетинг должен помочь их достичь?</span></li>
+                    <li>Какой рекламный бюджет выделен на данный момент? Как он распределён между каналами?</li>
+                    <li>Кто сейчас занимается маркетингом внутри компании? Есть ли подрядчики, с которыми я должен буду взаимодействовать?</li>
+                    <li>Какие каналы вы считаете самыми перспективными, а какие уже пробовали и отказались?</li>
+                    <li>Есть ли доступ к статистике по Авито и Яндекс.Директу за прошлые месяцы?</li>
+                    <li>Какие ожидания от сайта (лендингов)? Готовы ли использовать мои наработки с GitHub?</li>
+                    <li>Возможен ли гибридный график: часть работы удалённо, часть на объекте для съёмок/контроля?</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 6: Вопросы, которые зададут мне -->
+        <div class="accordion">
+            <div class="accordion-header">
+                🎯 Что спросят – и как отвечать
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <table class="roadmap-table">
+                    <tr><th>Вопрос</th><th>Ответ</th></tr>
+                    <tr><td>«Расскажите о вашем опыте в автобизнесе»</td>
+                        <td>Рассказать про General Detailing (партнёр, маркетинг, причины закрытия). Показать сайты и Авито-объявления, которые делал раньше.</td></tr>
+                    <tr><td>«Как вы будете привлекать клиентов без больших бюджетов?»</td>
+                        <td>Упор на Авито (бесплатные инструменты + тариф «Выделенное»), органический ВК (сторис, клипы), партнёрство с автомойками, акции за отзывы, SEO.</td></tr>
+                    <tr><td>«Что вы сделаете в первую же неделю?»</td>
+                        <td>Аудит всех каналов + запуск лендингов (мои прототипы). Покажу конкретный план (см. дорожную карту).</td></tr>
+                    <tr><td>«Ваши зарплатные ожидания?»</td>
+                        <td>«В вакансии указано 70-100 тысяч. Я рассчитываю на верхнюю планку, так как беру полный цикл маркетинга. Готов обсуждать привязку к KPI».</td></tr>
+                    <tr><td>«Как вы контролируете подрядчиков?»</td>
+                        <td>«Чёткое ТЗ, промежуточные отчёты, личная проверка кабинета. Если видны отклонения – подключаюсь сам».</td></tr>
+                    <tr><td>«Почему мы должны взять именно вас?»</td>
+                        <td>«У меня уникальный микс: я маркетолог-практик, который сам верстает сайты, снимает видео, настраивает рекламу, и при этом уже знаю кухню детейлинга изнутри благодаря опыту в General Detailing. Я не просто исполнитель, а партнёр по росту».</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Блок 7: Маркетинговые фишки-напоминалка -->
+        <div class="accordion">
+            <div class="accordion-header">
+                ⚡ Маркетинговые приёмы (шпаргалка)
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <ul>
+                    <li><span class="highlight">4U заголовки:</span> полезность, ультраспецифичность, срочность, уникальность.</li>
+                    <li><span class="highlight">PAS:</span> проблема → агитация → решение.</li>
+                    <li><span class="highlight">Страница «Спасибо»:</span> срок связи, срочный контакт, промокод за репост/подписку.</li>
+                    <li><span class="highlight">404 страница:</span> юмор + скидка (код «БАНАН404», «EVA404», «М8404»).</li>
+                    <li><span class="highlight">Дефицит:</span> «осталось 4 места», «только до субботы».</li>
+                    <li><span class="highlight">Социальное доказательство:</span> виджет отзывов, счётчик выполненных работ.</li>
+                    <li><span class="highlight">Авторитет:</span> сертификаты, обучение, опыт лет.</li>
+                    <li><span class="highlight">Необычная услуга:</span> «красный коврик + мокасины» (по аналогии с кассами).</li>
+                    <li><span class="highlight">Картинки:</span> человеческое лицо в левом верхнем углу, прямой взгляд.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Блок 8: Чеклист перед собеседованием -->
+        <div class="accordion">
+            <div class="accordion-header">
+                ✅ Чеклист перед встречей
+                <span class="icon">+</span>
+            </div>
+            <div class="accordion-content">
+                <ul>
+                    <li>Ноутбук заряжен, открыты: сайты (potolki35.ru, studioM8, gallex35), группа ВК, Авито Ильи.</li>
+                    <li>С телефона открыта эта HTML-шпаргалка.</li>
+                    <li>Вопросы к работодателю выписаны (можно в заметки).</li>
+                    <li>Одет аккуратно (рубашка/поло, джинсы, чистая обувь).</li>
+                    <li>Взять с собой ручку и блокнот (показать серьёзность).</li>
+                    <li>Перед входом: дыхание 4-7-8, расправить плечи.</li>
+                    <li>Помнить: я не прошу работу, я предлагаю решение их задач.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; color: #5A7A84;">
+            Вы готовы на 100%. Вперёд! 💪
+        </div>
+    </div>
+
+    <script>
+        // Аккордеон
+        const headers = document.querySelectorAll('.accordion-header');
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                const accordion = header.parentElement;
+                accordion.classList.toggle('active');
+                // Закрыть остальные при желании — не стал, чтобы можно было открыть несколько
+            });
+        });
+    </script>
+</body>
+</html>
