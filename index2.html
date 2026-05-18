@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Техническое портфолио | Мастер слаботочных систем</title>
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --border: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+      margin-bottom: 32px;
+    }
+    header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+    header p { color: var(--text-muted); margin-top: 6px; font-size: 16px; }
+    .tabs {
+      display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px;
+    }
+    .tab-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      transition: var(--transition);
+      white-space: nowrap;
+      position: relative;
+    }
+    .tab-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .tab-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+    .tab-btn.locked::after {
+      content: "🔒";
+      margin-left: 6px;
+      font-size: 12px;
+    }
+    .tab-content { display: none; animation: fadeIn 0.4s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+    .card h2 { font-size: 22px; margin-bottom: 16px; color: var(--accent); }
+    .card h3 { font-size: 18px; margin: 20px 0 10px; }
+    .card ul, .card ol { padding-left: 20px; margin-bottom: 12px; }
+    .card li { margin-bottom: 6px; }
+    .tag {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .tag.green { background: #dcfce7; color: #15803d; }
+    .tag.orange { background: #ffedd5; color: #c2410c; }
+    
+    .script-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 8px 8px 0;
+      position: relative;
+    }
+    .script-box .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .script-box .copy-btn:hover { background: #f1f5f9; }
+    .script-box .copy-btn.copied { background: var(--success); color: white; border-color: var(--success); }
+    
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+    th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { background: #f8fafc; font-weight: 600; }
+    
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal {
+      background: var(--surface); padding: 32px; border-radius: var(--radius); width: 90%; max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
+    }
+    .modal h3 { margin-bottom: 12px; }
+    .modal input {
+      width: 100%; padding: 12px; margin: 16px 0; border: 1px solid var(--border);
+      border-radius: 8px; font-size: 16px; text-align: center;
+    }
+    .modal button {
+      background: var(--accent); color: white; border: none; padding: 12px 24px;
+      border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 15px;
+      transition: var(--transition); width: 100%;
+    }
+    .modal button:hover { background: var(--accent-hover); }
+    .modal .error { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
+    
+    footer {
+      text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 40px;
+    }
+    @media (max-width: 768px) {
+      .tabs { gap: 6px; }
+      .tab-btn { padding: 10px 14px; font-size: 14px; }
+      .card { padding: 20px; }
+      header h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Техническое портфолио</h1>
+    <p>Мастер слаботочных систем • Видеонаблюдение • Сетевая инфраструктура • Автоматизация</p>
+  </div>
+</header>
+
+<main class="container">
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="tab1">📷 Проект 8 камер</button>
+    <button class="tab-btn locked" data-tab="tab2">️ Скрипты и найм</button>
+    <button class="tab-btn" data-tab="tab3">🏗️ Масштабный проект</button>
+  </nav>
+
+  <!-- TAB 1 -->
+  <section id="tab1" class="tab-content active">
+    <div class="card">
+      <h2>Временная система видеонаблюдения (8 камер)</h2>
+      <p>Техническая реализация на прямоугольном участке ~250×100 м. Монтаж по существующему забору из профнастила. Быстрый запуск, минимальное вмешательство в ландшафт, готовность к масштабированию.</p>
+      
+      <div class="grid-2">
+        <div>
+          <h3>📍 Точки установки</h3>
+          <ul>
+            <li>4 угла участка — контроль периметра без слепых зон</li>
+            <li>2 камеры на длинных сторонах (по центру)</li>
+            <li>2 камеры на въездной группе (въезд/выезд)</li>
+          </ul>
+          <span class="tag">Высота монтажа: 2.5–3 м</span>
+          <span class="tag">Угол наклона: 15–20°</span>
+        </div>
+        <div>
+          <h3> Кабельная трасса</h3>
+          <ul>
+            <li>Основной маршрут: крепление на горизонтальные перекладины забора пластиковыми стяжками</li>
+            <li>Без гофры на прямых участках (профнастил защищает от УФ и механики)</li>
+            <li>Гофра ПНД ∅20 мм только в местах: пересечение грунта, острые углы, ввод в помещение/NVR</li>
+          </ul>
+          <span class="tag green">Экономия времени</span>
+          <span class="tag orange">Запас на будущее</span>
+        </div>
+      </div>
+
+      <h3> Ключевое решение: технологический запас кабеля</h3>
+      <p>У каждой камеры оставляется <strong>3–5 метров</strong> кабеля в виде аккуратной бухты, зафиксированной стяжками. Это позволяет:</p>
+      <ol>
+        <li>Безболезненно перенести камеру при демонтаже/переносе забора</li>
+        <li>Избежать наращивания или замены линии в будущем</li>
+        <li>Снизить риски обрыва при земляных или строительных работах</li>
+      </ol>
+      <p><em>Рекомендация:</em> бухты маркируются бирками «ЗАПАС +4м» и фиксируются так, чтобы не провисать и не собирать воду.</p>
+
+      <h3>⚙️ Коммутация и настройка</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Этап</th><th>Действие</th><th>Срок</th></tr>
+          <tr><td>1. Подготовка</td><td>Разметка точек, проверка опор, подготовка кабеля и коннекторов</td><td>2–3 ч</td></tr>
+          <tr><td>2. Прокладка</td><td>Крепление кабеля к забору, ввод в гофру на сложных участках, запас у камер</td><td>4–5 ч</td></tr>
+          <tr><td>3. Монтаж камер</td><td>Крепление кронштейнов, установка камер, герметизация вводов</td><td>2 ч</td></tr>
+          <tr><td>4. Подключение</td><td>Обжим RJ-45, подключение к PoE-коммутатору, проверка линка</td><td>1.5 ч</td></tr>
+          <tr><td>5. Настройка</td><td>IP-адресация, добавление в NVR, юстировка угла, проверка записи</td><td>1.5 ч</td></tr>
+        </table>
+      </div>
+      <p><strong>Итого:</strong> полный цикл за 1 рабочий день. Сдача с фотоотчётом и актом ввода.</p>
+
+      <h3>🔮 Перспектива: обслуживание и перенос</h3>
+      <p>Система проектируется с учётом возможного переноса забора или расширения территории. Я готов взять на себя:</p>
+      <ul>
+        <li>Плановое ТО (чистка объективов, проверка креплений, обновление ПО)</li>
+        <li>Оперативный перенос камер при изменении контура участка</li>
+        <li>Модернизацию: добавление аналитики, интеграция с СКУД или датчиками</li>
+      </ul>
+      <p><span class="tag green">Гарантия на монтаж: 12 мес</span> <span class="tag">Выезд по гарантии: 24 ч</span></p>
+    </div>
+  </section>
+
+  <!-- TAB 2 -->
+  <section id="tab2" class="tab-content">
+    <div class="card">
+      <h2>🗣️ Сценарии диалога и техники убеждения</h2>
+      <p>Раздел защищён. Введите пароль для доступа к скриптам, НЛП-приёмам и отработке возражений.</p>
+      <button onclick="openModal()" style="margin-top:16px; padding:12px 24px; background:var(--accent); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:600;">Открыть доступ</button>
+    </div>
+    <div id="protected-content" style="display:none;">
+      <div class="card">
+        <h2> Структура встречи</h2>
+        <ol>
+          <li>Установление контакта и фокус на результате</li>
+          <li>Технический брифинг (просто, уверенно, цифрами)</li>
+          <li>Переход к должности мастера/координатора</li>
+          <li>Закрытие и фиксация следующих шагов</li>
+        </ol>
+
+        <div class="script-box">
+          <button class="copy-btn" onclick="copyScript(this)">Копировать</button>
+          <strong>Открытие:</strong><br>
+          «Добрый день, [Имя]! Спасибо, что дали возможность показать, как мы можем быстро закрыть задачу по видеонаблюдению. Я подготовил план установки 8 камер — всё можно сделать за 1 день, с подключением к вашему серверу и проверкой записи. Можно кратко показать?»
+        </div>
+
+        <div class="script-box">
+          <button class="copy-btn" onclick="copyScript(this)">Копировать</button>
+          <strong>Технический блок:</strong><br>
+          «Для запуска мне нужно: доступ к точке подключения, логин/пароль для добавления камер в систему, согласование точек установки. Камеры настраиваю по стандарту ONVIF — совместимо с 95% систем. Результат завтра к 18:00: 8 камер показывают, пишут, подписаны, есть акт готовности.»
+        </div>
+
+        <div class="script-box">
+          <button class="copy-btn" onclick="copyScript(this)">Копировать</button>
+          <strong>Переход к должности:</strong><br>
+          «Эта задача — хороший тест на совместимость. Если результат устроит, я готов работать с вами на постоянной основе как мастер по слаботочным системам и технический координатор. Мне важно не просто „отработать“, а выстроить систему, которая будет приносить результат без постоянного контроля.»
+        </div>
+
+        <div class="script-box">
+          <button class="copy-btn" onclick="copyScript(this)">Копировать</button>
+          <strong>Закрытие:</strong><br>
+          «Что вы думаете по плану? Есть ли вопросы по технической части или формату работы? Если в целом идея нравится — давайте определим: что нужно согласовать сегодня, кто будет контактным лицом, и в каком формате вам удобнее получать отчёты.»
+        </div>
+
+        <h3>🧠 НЛП-приёмы в диалоге</h3>
+        <ul>
+          <li><strong>Пресуппозиции:</strong> Вместо «Смогу ли настроить?» → «Когда я добавлю камеры, первым делом проверю запись и синхронизацию времени.»</li>
+          <li><strong>Выбор без выбора:</strong> «Что приоритетнее: онлайн-просмотр или сразу запись в архив?»</li>
+          <li><strong>Зеркалирование:</strong> Подстройка под темп речи, использование ключевых слов собеседника («надёжность», «контроль», «срок»).</li>
+          <li><strong>Якорь уверенности:</strong> Лёгкое сжатие пальцев в кулак при проговаривании сильных сторон (мозг связывает жест с состоянием).</li>
+          <li><strong>Фрейминг:</strong> Позиционируй себя не как «соискателя», а как «исполнителя с планом и ответственностью».</li>
+        </ul>
+
+        <h3>🛡️ Отработка возражений</h3>
+        <div class="table-wrap">
+          <table>
+            <tr><th>Возражение</th><th>Ответ</th></tr>
+            <tr><td>«У нас уже есть подрядчики»</td><td>«Отлично, значит, вы цените надёжность. Я предлагаю не замену, а усиление: тестовый запуск 8 камер за 1 день. Если результат устроит — обсудим масштабирование.»</td></tr>
+            <tr><td>«Сроки горят»</td><td>«Понимаю. Именно поэтому я пришёл с готовым планом и оборудованием. Завтра к 18:00 система будет работать. Без лишних согласований.»</td></tr>
+            <tr><td>«А если что-то пойдёт не так?»</td><td>«На каждом этапе — фотофиксация и чек-лист. Если возникнет нюанс — я не гадаю, а фиксирую, предлагаю 2 варианта решения и возвращаюсь с ответом в течение часа.»</td></tr>
+            <tr><td>«Вы один?»</td><td>«Да, но система спроектирована так, чтобы один специалист мог закрыть монтаж и настройку. При необходимости подключаю проверенных монтажников на земляные работы.»</td></tr>
+          </table>
+        </div>
+
+        <h3>📝 Чек-лист на встречу</h3>
+        <ul>
+          <li>✅ Ноутбук с ONVIF Device Manager и браузером</li>
+          <li>✅ Распечатанная схема участка и таблица адресации</li>
+          <li>✅ Блокнот для фиксации договорённостей</li>
+          <li>✅ Инструменты: обжимка, тестер, шуруповёрт, стяжки</li>
+          <li>✅ Проговорить вслух 3-минутный питч перед зеркалом</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3 -->
+  <section id="tab3" class="tab-content">
+    <div class="card">
+      <h2>🏗️ Масштабный проект: Вологда (3 локации)</h2>
+      <p>Проект благоустройства: пл. Возрождения, сквер на пл. Революции, сквер у церкви Иоанна Предтечи. Раздел 9 «Видеонаблюдение», рабочая документация ООО «БЕРСО».</p>
+
+      <div class="grid-2">
+        <div>
+          <h3>📊 Объём работ</h3>
+          <ul>
+            <li>62 уличные IP-камеры 5Мп (Satvision SVI-S353VMSD)</li>
+            <li>5 всепогодных шкафов 18U (ШТ-1…ШТ-5) на бетонных фундаментах</li>
+            <li>5 коммутаторов MikroTik CRS328-24P-4S+RM (PoE + SFP)</li>
+            <li>Оптоволокно ОКГЦ-8 (~495 м) + витая пара FTP Cat.5e (~4984 м)</li>
+            <li>Грозозащита, заземление ≤30 Ом, колодцы связи (22 шт.)</li>
+            <li>Интеграция с ЕДДС (ONVIF/RTSP, метаданные, NTP-синхронизация)</li>
+          </ul>
+        </div>
+        <div>
+          <h3>⏱️ Этапы и сроки</h3>
+          <div class="table-wrap">
+            <table>
+              <tr><th>Этап</th><th>Длительность</th></tr>
+              <tr><td>Подготовка и закупка</td><td>3–5 дней</td></tr>
+              <tr><td>Земляные работы и фундаменты</td><td>7–10 дней</td></tr>
+              <tr><td>Прокладка кабелей</td><td>5–7 дней</td></tr>
+              <tr><td>Сборка шкафов</td><td>2–3 дня</td></tr>
+              <tr><td>Установка камер</td><td>4–6 дней</td></tr>
+              <tr><td>Настройка сети и ЕДДС</td><td>3–5 дней</td></tr>
+              <tr><td>Пусконаладка и сдача</td><td>2–3 дня</td></tr>
+            </table>
+          </div>
+          <p><strong>Итого:</strong> 6–8 недель с учётом погодных рисков и согласований.</p>
+        </div>
+      </div>
+
+      <h3>👥 Команда и роли</h3>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Специальность</th><th>Кол-во</th><th>Задачи</th></tr>
+          <tr><td>Мастер/Координатор (вы)</td><td>1</td><td>Организация, контроль качества, связь с заказчиком, документация</td></tr>
+          <tr><td>Монтажники-слаботочники</td><td>2–3</td><td>Прокладка кабеля, монтаж камер, сборка шкафов</td></tr>
+          <tr><td>Оптик-сварщик</td><td>1 (субподряд)</td><td>Сварка ВОЛС, тестирование затухания</td></tr>
+          <tr><td>Настройщик сетей/ЕДДС</td><td>1</td><td>IP-адресация, VLAN, ONVIF/RTSP, интеграция с сервером</td></tr>
+          <tr><td>Землекопы/бетонщики</td><td>2 (временно)</td><td>Траншеи, фундаменты, колодцы</td></tr>
+        </table>
+      </div>
+
+      <h3>🎯 Ваша роль на проекте</h3>
+      <ul>
+        <li><strong>Организатор:</strong> ежедневные планёрки, распределение задач, контроль сроков</li>
+        <li><strong>Контролёр качества:</strong> сверка с проектом, маркировка, фотофиксация, акты</li>
+        <li><strong>Технический координатор:</strong> связь с ЕДДС, проверка настроек, диагностика сбоев</li>
+        <li><strong>Документатор:</strong> кабельный журнал, таблицы IP, схемы, исполнительная документация</li>
+        <li><strong>Представитель перед заказчиком:</strong> отчёты, согласование изменений, сдача этапов</li>
+      </ul>
+      <p><em>Примечание:</em> ваши навыки программирования и настройки ПО — это внутренний козырь. Они позволяют закрывать сложные задачи без привлечения сторонних специалистов, ускорять отладку и снижать риски. Клиенту достаточно знать: «Настройка и интеграция — под моим личным контролем, с тестовым запуском до финала».</p>
+
+      <h3>️ Ключевые риски и mitigation</h3>
+      <ul>
+        <li><strong>Погода/грунт:</strong> закладывать +20% времени, использовать укрытия, гибкий график земляных работ</li>
+        <li><strong>Согласования с ЕДДС:</strong> запросить ТЗ на интеграцию ДО старта, провести тестовый поток</li>
+        <li><strong>Доступ к опорам/щитам:</strong> заранее получить контакты ответственных, оформить допуски</li>
+        <li><strong>Брак/нехватка:</strong> резерв 10% по кабелю и коннекторам, проверка оборудования на складе</li>
+      </ul>
+      <p><span class="tag green">Гарантия на работы: 24 мес</span> <span class="tag">Режим реагирования: 4–24 ч</span></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <p>© 2025 | Техническое портфолио | Готово для размещения на GitHub Pages</p>
+    <p style="margin-top:6px; font-size:12px; opacity:0.7;">Файл самодостаточный. Не требует сборки. Просто залейте index.html в репозиторий и включите GitHub Pages.</p>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div id="passwordModal" class="modal-overlay">
+  <div class="modal">
+    <h3>🔒 Введите пароль</h3>
+    <p style="color:var(--text-muted); font-size:14px;">Доступ к скриптам и техникам убеждения</p>
+    <input type="password" id="passInput" placeholder="•••••••••••" autocomplete="off">
+    <button onclick="checkPassword()">Открыть</button>
+    <p class="error" id="passError">Неверный пароль. Попробуйте снова.</p>
+  </div>
+</div>
+
+<script>
+  // TABS
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      if(target === 'tab2' && document.getElementById('protected-content').style.display === 'none') {
+        openModal();
+        return;
+      }
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  // PASSWORD
+  const CORRECT_PASS = '89957886668';
+  function openModal() {
+    document.getElementById('passwordModal').style.display = 'flex';
+    document.getElementById('passInput').focus();
+  }
+  function checkPassword() {
+    const val = document.getElementById('passInput').value.trim();
+    if(val === CORRECT_PASS) {
+      document.getElementById('passwordModal').style.display = 'none';
+      document.getElementById('protected-content').style.display = 'block';
+      document.querySelector('.tab-btn[data-tab="tab2"]').classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab2').classList.add('active');
+    } else {
+      document.getElementById('passError').style.display = 'block';
+      document.getElementById('passInput').value = '';
+    }
+  }
+  document.getElementById('passInput').addEventListener('keypress', e => {
+    if(e.key === 'Enter') checkPassword();
+  });
+
+  // COPY SCRIPT
+  function copyScript(btn) {
+    const box = btn.parentElement;
+    const text = box.innerText.replace('Копировать', '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.textContent = 'Скопировано!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = 'Копировать';
+      }, 2000);
+    });
+  }
+
+  // Close modal on overlay click
+  document.getElementById('passwordModal').addEventListener('click', e => {
+    if(e.target === e.currentTarget) e.target.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
